@@ -1,18 +1,24 @@
 package principal;
 
-import java.awt.List;
 import java.util.ArrayList;
+import java.util.List;
 
-public class FilaB {
+public class FilaJogadores {
+	
+
 		
 		//Essa classe fila foi desenvolvida especificamente para lidar com a fila de jogadores do banco imobiliario	
 		
 	
-		private ArrayList<Jogador> fila;
+		private List<Jogador> fila;
 		private int tamanho;
 		private int ponteiro;
 		
-		public FilaB (ArrayList lista) {
+		public void adicionaJogadorNaFila(Jogador jog) {
+			fila.add(jog);
+		}
+		
+		public FilaJogadores (ArrayList<Jogador> lista) {
 		
 			this.fila = lista;
 			this.tamanho = fila.size();
@@ -25,7 +31,6 @@ public class FilaB {
 				this.ponteiro = 0;
 			}
 			return this.fila.get(this.ponteiro) ;
+
 		}
-		
-		
 }

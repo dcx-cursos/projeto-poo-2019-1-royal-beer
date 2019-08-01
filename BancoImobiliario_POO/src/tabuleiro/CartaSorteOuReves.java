@@ -11,5 +11,7 @@ public class CartaSorteOuReves implements CasaTabuleiro{
 		
 	}
 	
+	
+	
 
 }

@@ -3,13 +3,17 @@ package principal;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import exceptions.CorInexistenteException;
+import exceptions.CorJaEscolhidaException;
 import exceptions.EntradaInvalidaException;
+import tabuleiro.Tabuleiro;
 
 
 
 public class Main {
-	public static void main(String args[])  {
+	public static void main(String args[])   {
 		
+		boolean continueGame = true;
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Banco Imobiliario\n");
 		
@@ -48,22 +52,66 @@ public class Main {
 			
 			try {
 				menu.cadastraJogador(nomeJogador, corEscolhida);
-			}catch(EntradaInvalidaException e ) {
+			}catch(CorInexistenteException e ) {
 				System.out.println(e.toString());
+				cont --;
 				continue;
+			}catch(CorJaEscolhidaException e) {
+				System.out.println(e.toString());
+				cont--;
+				continue;
+			}finally {
+				cont++;
 			}
-			cont++;
+			
 			
 			if(numJogadores == cont) break;
 		}
 		
 
-		FilaB jogadores = new FilaB(menu.getListaJogadores());
+		FilaJogadores jogadores = new FilaJogadores(menu.getListaJogadores());
+		
 		System.out.println("O Banco Imobiliario ja vai começar.Aproveite!!");
-		Jogador jogador = jogadores.proxJogador();// variavel que guarda o jogador da vez
-		System.out.printf("A jogada de %s (%s) começou\n",jogador.getNome(), jogador.getCor());
-		System.out.println("Comandos disponiveis: [Jogar] [Sair]");
-		System.out.println("Entre com um comando");
+		Tabuleiro tabuleiro = new Tabuleiro();
+		
+		
+		
+		while(true) {
+			
+			Jogador jogador = jogadores.proxJogador();//Variavel que guarda o jogador da vez
+			
+			System.out.printf("A jogada de %s (%s) começou\n",jogador.getNome(), jogador.getCor());
+			System.out.println("Comandos disponiveis: [Jogar] [Sair]");
+			System.out.println("Entre com um comando");
+			
+			String comando = sc.nextLine();
+			
+			if(comando.toUpperCase().startsWith("SA")) {
+				
+					while(true) {
+						System.out.println("Você realmente quer sair?");
+						String opcao = sc.nextLine();
+						if(opcao.toUpperCase().startsWith("S")) {
+							continueGame = false;
+							break;
+						}else if (opcao.toUpperCase().startsWith("N")) {
+							break;
+						}else {
+							System.out.println("Comando inválido");
+							continue;
+							}
+				}
+					if (continueGame == false) {
+						System.out.println("Jogo Encerrado");
+						break;
+					}
+				
+			}else if (comando.toUpperCase().startsWith("JO")) {
+				
+			}
+			System.out.println("OI");
+		
+		}
 	
 		
 		

@@ -20,7 +20,7 @@ public class Jogador {
 		this.nome = nome;
 		this.cor = cor;
 		this.posicao = 0;
-		this.titulos = new ArrayList<Object>();
+		this.titulos = new ArrayList<Object>();//mudar para o tipo titulos quando fizer a classe
 		
 	}
 	
