@@ -1,6 +1,5 @@
 package principal;
 
-import java.awt.List;
 import java.util.ArrayList;
 
 import exceptions.SaldoInsuficienteException;
@@ -13,7 +12,7 @@ public class Jogador {
 	private String cor;
 	private int posicao;
 	private Double dinheiro = 1.500;
-	private ArrayList titulos;
+	private ArrayList<Object> titulos;
 	
 	public Jogador(String nome , String cor ) {
 		
@@ -30,7 +29,9 @@ public class Jogador {
 	public String getCor() {
 		return this.cor;
 	}
-	
+	public int getPosicao() {
+		return this.posicao;
+	}
 	public void andarCasas(int casasAAndar) {
 		this.posicao += casasAAndar;
 		if (posicao == 41) this.posicao = 0;
@@ -38,6 +39,10 @@ public class Jogador {
 	public double getDinheiro() {
 		return this.dinheiro;
 	}
+	public ArrayList<Object> getTitulos() {
+		return this.titulos;
+	}
+	
 	public void debitar(double valor) throws ValorNegativoException , SaldoInsuficienteException {
 		if (this.dinheiro <0) {
 			throw new ValorNegativoException("O valor inserido é negativo");
@@ -49,5 +54,18 @@ public class Jogador {
 		}
 		
 	}
-	
+public  void getStatus() {
+  System.out.print("Nome: " + this.getNome());
+  System.out.print("\nCor: " + this.getCor());
+  System.out.print("\nDinheiro: "+ this.getDinheiro());
+  System.out.print("\nPosição: " + this.getPosicao());
+  if (this.getTitulos().size() == 0) {
+	  System.out.print("\nTitulos: você ainda não possui Titulos\n");
+}
+  else {
+	  System.out.print("\nTitulos: " + this.getTitulos()+ "\n");
+	    
+  }
+
+}
 }

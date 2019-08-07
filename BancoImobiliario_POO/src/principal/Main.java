@@ -73,15 +73,15 @@ public class Main {
 		
 		System.out.println("O Banco Imobiliario ja vai começar.Aproveite!!");
 		Tabuleiro tabuleiro = new Tabuleiro();
+		Jogador jogador = jogadores.proxJogador();//Variavel que guarda o jogador da vez
 		
-		
-		
+		//Inicia a partida com um laço que sai ao terminar o jogo ou quando todos jogadores escolhem sair
 		while(true) {
+			 
 			
-			Jogador jogador = jogadores.proxJogador();//Variavel que guarda o jogador da vez
 			
 			System.out.printf("A jogada de %s (%s) começou\n",jogador.getNome(), jogador.getCor());
-			System.out.println("Comandos disponiveis: [Jogar] [Sair]");
+			System.out.println("Comandos disponiveis: [Jogar] [Sair] [Status]");
 			System.out.println("Entre com um comando");
 			
 			String comando = sc.nextLine();
@@ -107,10 +107,17 @@ public class Main {
 					}
 				
 			}else if (comando.toUpperCase().startsWith("JO")) {
+			
+				
+				jogador = jogadores.proxJogador(); //Variavel que guarda o jogador da vez
+			}
+			else if (comando.toUpperCase().startsWith("ST")) {
+				
+				jogador.getStatus();
 				
 			}
-			System.out.println("OI");
-		
+			
+			
 		}
 	
 		
