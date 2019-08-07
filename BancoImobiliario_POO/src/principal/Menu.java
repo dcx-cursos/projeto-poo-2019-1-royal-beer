@@ -17,8 +17,6 @@ public class Menu {
 		
 		
 		ProcuraNaLista searcher = new ProcuraNaLista();
-		System.out.println(searcher.busca(cores, cor));
-		System.out.println(searcher.buscaCorJogador(jogadores, cor));
 		if(searcher.buscaCorJogador(jogadores,cor)== -1) {
 			if(searcher.busca(cores,cor)!= -1) {
 				Jogador jog = new Jogador(nome,cor);
@@ -28,7 +26,7 @@ public class Menu {
 				throw new CorInexistenteException("A cor escolhida não está dentre as opções");
 			}
 		}else {
-			throw new CorJaEscolhidaException("A cor escolhida ja foi selecionada por outro jogador?");
+			throw new CorJaEscolhidaException("A cor escolhida ja foi selecionada por outro jogador! Escolha novamente");
 		}
 	
 	}

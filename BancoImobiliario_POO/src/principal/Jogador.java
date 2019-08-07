@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
+import tabuleiro.Titulo;
 
 public class Jogador {
 	
@@ -12,14 +13,14 @@ public class Jogador {
 	private String cor;
 	private int posicao;
 	private Double dinheiro = 1.500;
-	private ArrayList<Object> titulos;
+	private ArrayList<Titulo> titulos;
 	
 	public Jogador(String nome , String cor ) {
 		
 		this.nome = nome;
 		this.cor = cor;
 		this.posicao = 0;
-		this.titulos = new ArrayList<Object>();//mudar para o tipo titulos quando fizer a classe
+		this.titulos = new ArrayList<Titulo>();//mudar para o tipo titulos quando fizer a classe
 		
 	}
 	
@@ -39,7 +40,7 @@ public class Jogador {
 	public double getDinheiro() {
 		return this.dinheiro;
 	}
-	public ArrayList<Object> getTitulos() {
+	public ArrayList<Titulo> getTitulos() {
 		return this.titulos;
 	}
 	
@@ -54,18 +55,22 @@ public class Jogador {
 		}
 		
 	}
-public  void getStatus() {
-  System.out.print("Nome: " + this.getNome());
-  System.out.print("\nCor: " + this.getCor());
-  System.out.print("\nDinheiro: "+ this.getDinheiro());
-  System.out.print("\nPosição: " + this.getPosicao());
-  if (this.getTitulos().size() == 0) {
-	  System.out.print("\nTitulos: você ainda não possui Titulos\n");
-}
-  else {
-	  System.out.print("\nTitulos: " + this.getTitulos()+ "\n");
-	    
-  }
+public String getStatus() {
+	if (this.titulos.size() == 0 ) {
+	return ("O status de "+ this.nome.toUpperCase() +"("+this.cor+") é o seguinte :\n"
+			+ "Situado na posição: "+ this.posicao+ "\nPossui: $"+ this.dinheiro
+			+"\nTitulos : Nenhum");
+	}else {
+		
+		String guardaTitulos = null;
+		for (Titulo k : titulos) {
+			guardaTitulos += k +"\n" ; 
+		}
+		
+		return ("O status de "+ this.nome.toUpperCase() +" ("+this.cor+") é o seguinte :\n"
+		+ "Situado na posição: "+ this.posicao+ "\nPossui: $"+ this.dinheiro
+		+ "\nTitulo(s) :" + guardaTitulos );
+	}
 
 }
 }

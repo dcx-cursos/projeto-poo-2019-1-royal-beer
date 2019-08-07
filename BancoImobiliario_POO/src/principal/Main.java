@@ -43,7 +43,7 @@ public class Main {
 		while(true) {
 			System.out.printf("Digite o nome do Jogador %d",cont+1);
 			String nomeJogador = sc.nextLine();
-			
+			while(true) {
 			System.out.printf("Escolha a cor do peão do jogador %d entre as opções seguintes:\n" + 
 					"\n" + 
 					"[preto][branco][vermelho][verde][azul][amarelo][laranja][rosa]\n",cont+1);
@@ -63,7 +63,8 @@ public class Main {
 			}finally {
 				cont++;
 			}
-			
+			break;
+			}
 			
 			if(numJogadores == cont) break;
 		}
@@ -113,7 +114,7 @@ public class Main {
 			}
 			else if (comando.toUpperCase().startsWith("ST")) {
 				
-				jogador.getStatus();
+				System.out.println(jogador.getStatus());
 				
 			}
 			
