@@ -25,12 +25,22 @@ public class FilaJogadores {
 			this.ponteiro = -1;
 		}
 		
+		public int quantidadeJogadores() {
+			return this.fila.size();
+		}
+		
 		public Jogador proxJogador() {
 			this.ponteiro+= 1;
 			if(this.ponteiro == this.fila.size()) {
 				this.ponteiro = 0;
 			}
-			return this.fila.get(this.ponteiro) ;
+			if(this.fila.get(this.ponteiro).isOnGame() == true) {
+				return this.fila.get(this.ponteiro);
+			}
+			fila.remove(this.fila.get(this.ponteiro));
+			
+			return this.proxJogador();
+			
 
 		}
 }

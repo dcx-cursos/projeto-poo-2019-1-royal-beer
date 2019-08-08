@@ -8,7 +8,7 @@ import principal.Jogador;
 public class CartasLugares implements CasaTabuleiro{
 	
 	
-	private String nome;//
+	private String nome;
 	private String cor;
 	private double preco;
 	private double valorAluguelSemCasa;
@@ -41,7 +41,9 @@ public class CartasLugares implements CasaTabuleiro{
 		this.quantidaDeCasas = 0;
 		this.posicao = 0;
 		
+		
 	}
+	
 	
 	
 	public void venderCasa(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException {
@@ -56,6 +58,10 @@ public class CartasLugares implements CasaTabuleiro{
 		
 	}
 	
+	
+	
+	
+	
 	public void comprar(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException {
 		if (this.dono == null) {
 			jogador.debitar(preco);
@@ -64,7 +70,7 @@ public class CartasLugares implements CasaTabuleiro{
 	}
 	
 	
-	public double getValorAluguel() throws ErroAoCalcularAluguelException {
+	public double getAluguel() throws ErroAoCalcularAluguelException {
 		if(this.quantidaDeCasas >5) {
 			
 			throw new ErroAoCalcularAluguelException("O numero de casas excede o limite");
@@ -78,6 +84,17 @@ public class CartasLugares implements CasaTabuleiro{
 		else return this.valorAluguelComHotel;
 	
 	}
+	
+	public void cobraAluguel(Jogador jogador) throws ErroAoCalcularAluguelException, ValorNegativoException {
+
+			jogador.debitar(getAluguel());
+			this.dono.creditar(getAluguel());
+		
+			
+		
+	}
+	
+	
 	
 	
 	public double getValorHipoteca() {
@@ -101,6 +118,13 @@ public class CartasLugares implements CasaTabuleiro{
 	}
 	public Jogador getDono() {
 		return this.dono;
+	}
+	
+	public boolean hasDono() {
+		if (this.dono == null ) {
+			return false;
+		}
+		return true;
 	}
 	
 	

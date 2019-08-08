@@ -6,6 +6,11 @@ import java.util.Scanner;
 import exceptions.CorInexistenteException;
 import exceptions.CorJaEscolhidaException;
 import exceptions.EntradaInvalidaException;
+import exceptions.SaldoInsuficienteException;
+import exceptions.ValorNegativoException;
+import tabuleiro.CartasLugares;
+import tabuleiro.CasaTabuleiro;
+import tabuleiro.Dado;
 import tabuleiro.Tabuleiro;
 
 
@@ -18,12 +23,13 @@ public class Main {
 		System.out.println("Banco Imobiliario\n");
 		
 		Menu menu = new Menu();
+		Dado dado = new Dado();
 		
 		int numJogadores;
 		
 		// Receber o numero de jogadores e verificar se atende aos parametros;
 		while(true) {
-			System.out.print("Digite o numero de jogadores [2-8]");
+			System.out.print("Digite o numero de jogadores [2-8] - ");
 		try {
 			numJogadores = Integer.parseInt(sc.nextLine());
 			if(numJogadores>= 2 && numJogadores<=8) {
@@ -41,15 +47,14 @@ public class Main {
 		}
 		int cont = 0;
 		while(true) {
-			System.out.printf("Digite o nome do Jogador %d",cont+1);
+			System.out.printf("Digite o nome do Jogador %d - ",cont+1);
 			String nomeJogador = sc.nextLine();
 			while(true) {
-			System.out.printf("Escolha a cor do peão do jogador %d entre as opções seguintes:\n" + 
-					"\n" + 
+			System.out.printf("\nEscolha a cor do peão do jogador %d entre as opções seguintes:\n" + 
 					"[preto][branco][vermelho][verde][azul][amarelo][laranja][rosa]\n",cont+1);
 			
 			String corEscolhida = sc.nextLine();
-			
+
 			try {
 				menu.cadastraJogador(nomeJogador, corEscolhida);
 			}catch(CorInexistenteException e ) {
@@ -108,13 +113,30 @@ public class Main {
 					}
 				
 			}else if (comando.toUpperCase().startsWith("JO")) {
+
+				int dadosJogados [] = dado.JogarDoisDados(); 
+				jogador.andarCasas(dadosJogados);
+				CasaTabuleiro cartaAtual = null;
+				try {
+					cartaAtual = tabuleiro.getCasaTabuleiro(jogador.getPosicao());
+				}catch(EntradaInvalidaException e) {
+					e.toString();
+				}
+				
+				System.out.println("O jogador "+ jogador.getNome() + "("+ jogador.getCor()+") "
+						+"tirou " + dadosJogados[0] + "," + dadosJogados[1] + " e o peão avançou para " +
+						jogador.getPosicao()+ " -" + cartaAtual.getNome()+"\n");
+				
 			
 				
-				jogador = jogadores.proxJogador(); //Variavel que guarda o jogador da vez
-			}
-			else if (comando.toUpperCase().startsWith("ST")) {
+				jogador = jogadores.proxJogador();
+				
+				
+			}else if (comando.toUpperCase().startsWith("ST")) {
 				
 				System.out.println(jogador.getStatus());
+				
+				
 				
 			}
 			

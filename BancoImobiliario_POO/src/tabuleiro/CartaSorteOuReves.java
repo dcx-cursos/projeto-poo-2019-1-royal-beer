@@ -11,6 +11,10 @@ public class CartaSorteOuReves implements CasaTabuleiro{
 		
 	}
 	
+	public boolean hasDono() {
+		return false;
+	}
+
 	
 	
 

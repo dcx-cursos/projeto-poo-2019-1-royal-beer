@@ -33,9 +33,16 @@ public class Jogador {
 	public int getPosicao() {
 		return this.posicao;
 	}
+	
+	public void andarCasas(int [] dadosLancados) {
+		
+		this.posicao +=  dadosLancados[0]+ dadosLancados[1];
+		if(this.posicao >= 40) this.posicao = 40 - this.posicao;
+	}
+	
 	public void andarCasas(int casasAAndar) {
 		this.posicao += casasAAndar;
-		if (posicao == 41) this.posicao = 0;
+		if (this.posicao >= 40) this.posicao = 40 - this.posicao ;
 	}
 	public double getDinheiro() {
 		return this.dinheiro;
@@ -44,16 +51,27 @@ public class Jogador {
 		return this.titulos;
 	}
 	
-	public void debitar(double valor) throws ValorNegativoException , SaldoInsuficienteException {
+	public boolean isOnGame() {
+		return this.onGame;
+	}
+	
+	public void debitar(double valor) throws ValorNegativoException  {
 		if (this.dinheiro <0) {
 			throw new ValorNegativoException("O valor inserido é negativo");
-		}else if(this.dinheiro<=valor ) {
-			throw new SaldoInsuficienteException("O da compra é superior ao seu saldo");
 		}else {
 			this.dinheiro -= valor;
+			if(this.dinheiro < 0) {
+				this.onGame = false;
+			}
 			
 		}
 		
+	}
+	
+	public void creditar(double valor) {
+		if (valor > 0) {
+			this.dinheiro += valor;
+		}
 	}
 public String getStatus() {
 	if (this.titulos.size() == 0 ) {
