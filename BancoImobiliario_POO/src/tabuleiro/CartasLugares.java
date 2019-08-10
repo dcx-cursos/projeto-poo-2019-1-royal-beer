@@ -49,20 +49,9 @@ public class CartasLugares implements CasaTabuleiro{
 	public void venderCasa(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException {
 		jogador.debitar(this.valorImovelCasa);
 	}
+
 	
-	public void andarCasas(int quantidadeDeCasas) {
-		this.posicao += quantidadeDeCasas;
-		if (posicao > 40) {
-			this.posicao = 40 -posicao;
-		}
-		
-	}
-	
-	
-	
-	
-	
-	public void comprar(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException {
+	public void comprar(Jogador jogador) throws ValorNegativoException{
 		if (this.dono == null) {
 			jogador.debitar(preco);
 			

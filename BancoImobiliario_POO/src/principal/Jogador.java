@@ -12,7 +12,7 @@ public class Jogador {
 	private String nome;
 	private String cor;
 	private int posicao;
-	private Double dinheiro = 1.500;
+	private Double dinheiro = 1500.0;
 	private ArrayList<Titulo> titulos;
 	
 	public Jogador(String nome , String cor ) {
@@ -37,12 +37,19 @@ public class Jogador {
 	public void andarCasas(int [] dadosLancados) {
 		
 		this.posicao +=  dadosLancados[0]+ dadosLancados[1];
-		if(this.posicao >= 40) this.posicao = 40 - this.posicao;
+		if(this.posicao >= 40) {
+			this.posicao = this.posicao -40;
+			this.dinheiro += 200;
+		}
+	
 	}
 	
 	public void andarCasas(int casasAAndar) {
 		this.posicao += casasAAndar;
-		if (this.posicao >= 40) this.posicao = 40 - this.posicao ;
+		if (this.posicao >= 40) {
+			this.posicao = this.posicao -40 ;
+			this.dinheiro += 200;
+		}
 	}
 	public double getDinheiro() {
 		return this.dinheiro;

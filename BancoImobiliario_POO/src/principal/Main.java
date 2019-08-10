@@ -6,12 +6,20 @@ import java.util.Scanner;
 import exceptions.CorInexistenteException;
 import exceptions.CorJaEscolhidaException;
 import exceptions.EntradaInvalidaException;
+import exceptions.ErroAoCalcularAluguelException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
+import tabuleiro.CartaSorteOuReves;
 import tabuleiro.CartasLugares;
 import tabuleiro.CasaTabuleiro;
+import tabuleiro.Companhia;
 import tabuleiro.Dado;
+import tabuleiro.ImpostoDeRenda;
+import tabuleiro.LucrosEDividendos;
+import tabuleiro.ParadaLivre;
+import tabuleiro.Prisao;
 import tabuleiro.Tabuleiro;
+import tabuleiro.VaParaPrisao;
 
 
 
@@ -122,12 +130,61 @@ public class Main {
 				}catch(EntradaInvalidaException e) {
 					e.toString();
 				}
-				
+			 
 				System.out.println("O jogador "+ jogador.getNome() + "("+ jogador.getCor()+") "
-						+"tirou " + dadosJogados[0] + "," + dadosJogados[1] + " e o peão avançou para " +
-						jogador.getPosicao()+ " -" + cartaAtual.getNome()+"\n");
+						+"tirou " + dadosJogados[0] + "," + dadosJogados[1] + " e o peão avançou para " 
+						+jogador.getPosicao()+ " -" + cartaAtual.getNome()+"\n");
+						
+						int posicaoJogador = jogador.getPosicao();
 				
-			
+						 if(posicaoJogador == 10) {
+							 Prisao cartaEmUso = (Prisao) cartaAtual;
+						 }else if(posicaoJogador == 2||posicaoJogador == 12||posicaoJogador ==16
+								 ||posicaoJogador ==22||posicaoJogador == 27||posicaoJogador == 37) {
+							 CartaSorteOuReves cartaEmUso = (CartaSorteOuReves) cartaAtual;
+						 }else if (posicaoJogador == 5|| posicaoJogador == 7 || posicaoJogador == 15
+								 || posicaoJogador == 25 ||posicaoJogador == 32|| posicaoJogador == 35) {
+							 Companhia cartaEmUso = (Companhia) cartaAtual;
+						 }else if (jogador.getPosicao() == 18) {
+							 LucrosEDividendos cartaEmUso = (LucrosEDividendos) cartaAtual;
+						 }else if(jogador.getPosicao()== 20) {
+							 ParadaLivre cartaEmUso = (ParadaLivre) cartaAtual;
+						 }
+						 else if(jogador.getPosicao() == 24) {
+							 ImpostoDeRenda cartaEmUso = (ImpostoDeRenda) cartaAtual;
+						 }else if(jogador.getPosicao() == 30) {
+							 VaParaPrisao cartaEmUso = (VaParaPrisao) cartaAtual;
+						 }else {
+							CartasLugares cartaEmUso = (CartasLugares) cartaAtual;
+							if(cartaEmUso.hasDono()) {
+								try {
+								System.out.println("Essa propriedade é de "+cartaEmUso.getDono().getNome()
+										+"o valor do aluguel a ser debitado é de "+cartaEmUso.getAluguel());
+								cartaEmUso.cobraAluguel(jogador);
+										
+								}catch(ErroAoCalcularAluguelException |ValorNegativoException e) {
+									e.toString();
+								}
+								}else {
+									System.out.println("O titulo da propriedade "+cartaEmUso.getNome() +" está disponivel por"
+											+ " por $ " + cartaEmUso.getPreco());
+									if(jogador.getDinheiro() > cartaEmUso.getPreco()) {
+										System.out.println(jogador.getNome()+",você possui "+jogador.getDinheiro()
+										+"\nDeseja comprar "+cartaEmUso.getNome()+" ?");
+										String opcao = sc.nextLine();
+										if(opcao.toUpperCase().startsWith("S")) {
+											try {
+											cartaEmUso.comprar(jogador);
+											}catch(ValorNegativoException e){
+												e.toString();
+											}
+										}
+									}else {
+										System.out.println("Você não possui dinheiro para comprar a propriedade");
+									}
+							}
+						 }
+						
 				
 				jogador = jogadores.proxJogador();
 				

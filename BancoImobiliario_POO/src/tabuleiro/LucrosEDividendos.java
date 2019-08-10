@@ -9,5 +9,6 @@ public class LucrosEDividendos implements CasaTabuleiro {
 	
 	public boolean hasDono() {
 		return false;
+		
 	}
 }
