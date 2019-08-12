@@ -1,5 +1,5 @@
 package tabuleiro;
 
-public class Titulo {
-
+public interface Titulo {
+	
 }

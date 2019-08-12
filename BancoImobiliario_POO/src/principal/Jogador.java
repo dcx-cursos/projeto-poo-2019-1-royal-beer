@@ -13,15 +13,19 @@ public class Jogador {
 	private String cor;
 	private int posicao;
 	private Double dinheiro = 1500.0;
-	private ArrayList<Titulo> titulos;
+	private ArrayList<String> titulos;
 	
 	public Jogador(String nome , String cor ) {
 		
 		this.nome = nome;
 		this.cor = cor;
 		this.posicao = 0;
-		this.titulos = new ArrayList<Titulo>();//mudar para o tipo titulos quando fizer a classe
+		this.titulos = new ArrayList<String>();//mudar para o tipo titulos quando fizer a classe
 		
+	}
+	
+	public void addTitulo(String titulo) {
+		titulos.add(titulo);
 	}
 	
 	public String getNome() {
@@ -53,8 +57,9 @@ public class Jogador {
 	}
 	public double getDinheiro() {
 		return this.dinheiro;
+		
 	}
-	public ArrayList<Titulo> getTitulos() {
+	public ArrayList<String> getTitulos() {
 		return this.titulos;
 	}
 	
@@ -62,15 +67,18 @@ public class Jogador {
 		return this.onGame;
 	}
 	
-	public void debitar(double valor) throws ValorNegativoException  {
-		if (this.dinheiro <0) {
-			throw new ValorNegativoException("O valor inserido é negativo");
-		}else {
-			this.dinheiro -= valor;
-			if(this.dinheiro < 0) {
-				this.onGame = false;
+	public void debitar(double valor) throws ValorNegativoException, SaldoInsuficienteException  {
+		if (valor >= 0 ) {
+			if(this.dinheiro >= valor) {
+				this.dinheiro -= valor;
+			}else {
+				throw new SaldoInsuficienteException("O seu saldo é insuficiente para realizar a açao");
 			}
-			
+		}else {
+			throw new ValorNegativoException("O valor inserido não pode ser negativo");
+		}
+		if (this.dinheiro <= 0) {
+			this.onGame = false;
 		}
 		
 	}
@@ -87,8 +95,8 @@ public String getStatus() {
 			+"\nTitulos : Nenhum");
 	}else {
 		
-		String guardaTitulos = null;
-		for (Titulo k : titulos) {
+		String guardaTitulos = "";
+		for (String k : titulos) {
 			guardaTitulos += k +"\n" ; 
 		}
 		

@@ -17,7 +17,7 @@ public class FilaJogadores {
 		public void adicionaJogadorNaFila(Jogador jog) {
 			fila.add(jog);
 		}
-		
+	
 		public FilaJogadores (ArrayList<Jogador> lista) {
 		
 			this.fila = lista;
@@ -34,7 +34,7 @@ public class FilaJogadores {
 			if(this.ponteiro == this.fila.size()) {
 				this.ponteiro = 0;
 			}
-			if(this.fila.get(this.ponteiro).isOnGame() == true) {
+			if(this.fila.get(this.ponteiro).isOnGame()) {
 				return this.fila.get(this.ponteiro);
 			}
 			fila.remove(this.fila.get(this.ponteiro));

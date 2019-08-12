@@ -58,7 +58,7 @@ public class Tabuleiro {
 	public CasaTabuleiro [] getTabuleiro() {
 		return tabuleiro;
 	}
-	
+
 	public CasaTabuleiro getCasaTabuleiro(int num) throws EntradaInvalidaException {
 		if(num >= 0 && num <= 40) return this.tabuleiro[num];
 		else {

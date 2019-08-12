@@ -8,7 +8,7 @@ public class Dado {
 		
 		int Dados [] = {r.nextInt(5)+1 , r.nextInt(5)+1};
 		return Dados;
-		
+	
 	}
 
 }

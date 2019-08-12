@@ -1,11 +1,12 @@
 package tabuleiro;
 
 import exceptions.ErroAoCalcularAluguelException;
+import exceptions.LimiteDeConstrucoesException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import principal.Jogador;
 
-public class CartasLugares implements CasaTabuleiro{
+public class CartasLugares implements CasaTabuleiro, Titulo{
 	
 	
 	private String nome;
@@ -46,14 +47,22 @@ public class CartasLugares implements CasaTabuleiro{
 	
 	
 	
-	public void venderCasa(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException {
+	public void venderCasa(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException, LimiteDeConstrucoesException {
+		if(this.quantidaDeCasas <= 4) {
 		jogador.debitar(this.valorImovelCasa);
+		this.quantidaDeCasas += 1;
+		}else {
+			throw new LimiteDeConstrucoesException("O numero máximo de construções foi atingido em" + this.nome);
+		}
 	}
 
 	
-	public void comprar(Jogador jogador) throws ValorNegativoException{
+	public void comprar(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException{
 		if (this.dono == null) {
+			this.dono = jogador;
 			jogador.debitar(preco);
+			jogador.addTitulo(this.nome);
+			
 			
 		}
 	}
@@ -74,7 +83,7 @@ public class CartasLugares implements CasaTabuleiro{
 	
 	}
 	
-	public void cobraAluguel(Jogador jogador) throws ErroAoCalcularAluguelException, ValorNegativoException {
+	public void cobraAluguel(Jogador jogador) throws ErroAoCalcularAluguelException, ValorNegativoException, SaldoInsuficienteException {
 
 			jogador.debitar(getAluguel());
 			this.dono.creditar(getAluguel());

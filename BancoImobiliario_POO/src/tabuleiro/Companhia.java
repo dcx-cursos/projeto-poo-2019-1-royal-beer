@@ -2,7 +2,7 @@ package tabuleiro;
 
 import principal.Jogador;
 
-public class Companhia implements CasaTabuleiro {
+public class Companhia implements CasaTabuleiro{
 	
 	private String nome;
 	private double preco;

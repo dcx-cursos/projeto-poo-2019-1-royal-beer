@@ -25,7 +25,7 @@ import tabuleiro.VaParaPrisao;
 
 public class Main {
 	public static void main(String args[])   {
-		
+
 		boolean continueGame = true;
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Banco Imobiliario\n");
@@ -87,11 +87,16 @@ public class Main {
 		
 		System.out.println("O Banco Imobiliario ja vai começar.Aproveite!!");
 		Tabuleiro tabuleiro = new Tabuleiro();
+		
+		
 		Jogador jogador = jogadores.proxJogador();//Variavel que guarda o jogador da vez
+		
+		
+		
 		
 		//Inicia a partida com um laço que sai ao terminar o jogo ou quando todos jogadores escolhem sair
 		while(true) {
-			 
+			
 			
 			
 			System.out.printf("A jogada de %s (%s) começou\n",jogador.getNome(), jogador.getCor());
@@ -137,30 +142,63 @@ public class Main {
 						
 						int posicaoJogador = jogador.getPosicao();
 				
-						 if(posicaoJogador == 10) {
+						 if(posicaoJogador == 10) { 
 							 Prisao cartaEmUso = (Prisao) cartaAtual;
 						 }else if(posicaoJogador == 2||posicaoJogador == 12||posicaoJogador ==16
 								 ||posicaoJogador ==22||posicaoJogador == 27||posicaoJogador == 37) {
+							 	
 							 CartaSorteOuReves cartaEmUso = (CartaSorteOuReves) cartaAtual;
+				
+							 
+							 System.out.println("Parada livre");
+							 
 						 }else if (posicaoJogador == 5|| posicaoJogador == 7 || posicaoJogador == 15
 								 || posicaoJogador == 25 ||posicaoJogador == 32|| posicaoJogador == 35) {
+							 
 							 Companhia cartaEmUso = (Companhia) cartaAtual;
+							 
+							 System.out.println("Parada livre");
+							 
 						 }else if (jogador.getPosicao() == 18) {
+							 
 							 LucrosEDividendos cartaEmUso = (LucrosEDividendos) cartaAtual;
+							 cartaEmUso.ativaLucrosEDividendos(jogador);
+							 
 						 }else if(jogador.getPosicao()== 20) {
+							 
 							 ParadaLivre cartaEmUso = (ParadaLivre) cartaAtual;
+							 System.out.println("Parada livre");
 						 }
 						 else if(jogador.getPosicao() == 24) {
+							 
 							 ImpostoDeRenda cartaEmUso = (ImpostoDeRenda) cartaAtual;
+							 try {
+							 cartaEmUso.ativaImpostoDeRenda(jogador);
+							 }catch(ValorNegativoException e) {
+								 e.toString();
+							 }catch(SaldoInsuficienteException e){
+								 e.toString();
+							 }
+							 
+							 
 						 }else if(jogador.getPosicao() == 30) {
+							 
 							 VaParaPrisao cartaEmUso = (VaParaPrisao) cartaAtual;
+							 System.out.println("Parada livre");
+						
+						 }else if(jogador.getPosicao() == 0){
+							 System.out.println("Parada Livre");
 						 }else {
 							CartasLugares cartaEmUso = (CartasLugares) cartaAtual;
 							if(cartaEmUso.hasDono()) {
 								try {
 								System.out.println("Essa propriedade é de "+cartaEmUso.getDono().getNome()
 										+"o valor do aluguel a ser debitado é de "+cartaEmUso.getAluguel());
+								try {
 								cartaEmUso.cobraAluguel(jogador);
+								}catch(SaldoInsuficienteException e) {
+									System.out.println(e.toString());
+								}
 										
 								}catch(ErroAoCalcularAluguelException |ValorNegativoException e) {
 									e.toString();
@@ -170,13 +208,13 @@ public class Main {
 											+ " por $ " + cartaEmUso.getPreco());
 									if(jogador.getDinheiro() > cartaEmUso.getPreco()) {
 										System.out.println(jogador.getNome()+",você possui "+jogador.getDinheiro()
-										+"\nDeseja comprar "+cartaEmUso.getNome()+" ?");
+										+"\nDeseja comprar "+cartaEmUso.getNome()+" ? [S/N] ");
 										String opcao = sc.nextLine();
 										if(opcao.toUpperCase().startsWith("S")) {
 											try {
 											cartaEmUso.comprar(jogador);
-											}catch(ValorNegativoException e){
-												e.toString();
+											}catch(ValorNegativoException|  SaldoInsuficienteException e){
+												System.out.println(e.toString());
 											}
 										}
 									}else {
@@ -185,8 +223,8 @@ public class Main {
 							}
 						 }
 						
-				
 				jogador = jogadores.proxJogador();
+			
 				
 				
 			}else if (comando.toUpperCase().startsWith("ST")) {
@@ -196,11 +234,11 @@ public class Main {
 				
 				
 			}
-			
-			
 		}
+			
+			
 	
-		
+			
 		
 			
 		

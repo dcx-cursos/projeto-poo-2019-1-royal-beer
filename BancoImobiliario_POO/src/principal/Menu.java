@@ -10,7 +10,7 @@ import exceptions.EntradaInvalidaException;
 public class Menu {
 	
 	ArrayList<Jogador> jogadores = new ArrayList<>();
-	
+
 	private String []  cores= {"PRETO","BRANCO","VERMELHO","VERDE","AZUL","AMARELO","LARANJA","ROSA"};
 	
 	public void cadastraJogador(String nome , String cor) throws  CorInexistenteException, CorJaEscolhidaException {
