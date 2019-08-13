@@ -2,6 +2,7 @@ package principal;
 
 import java.util.ArrayList;
 
+import exceptions.ErroAoCalcularAluguelException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import tabuleiro.Dado;
@@ -14,7 +15,7 @@ public class Jogador {
 	private String cor;
 	private int posicao;
 	private Double dinheiro = 1500.0;
-	private ArrayList<String> titulos;
+	private ArrayList<Titulo> titulos;
 	private Dado dado;
 	
 	public Jogador(String nome , String cor ) {
@@ -23,11 +24,16 @@ public class Jogador {
 		this.nome = nome;
 		this.cor = cor;
 		this.posicao = 0;
-		this.titulos = new ArrayList<String>();//mudar para o tipo titulos quando fizer a classe
+		this.titulos = new ArrayList<Titulo>();//mudar para o tipo titulos quando fizer a classe
 		
 	}
 	
-	public void addTitulo(String titulo) {
+	public void comprar(Titulo titulo) throws ValorNegativoException, SaldoInsuficienteException {
+		this.debitar(titulo.getPreco());
+		this.titulos.add(titulo);
+	}
+	
+	public void addTitulo(Titulo titulo) {
 		titulos.add(titulo);
 	}
 	
@@ -63,7 +69,7 @@ public class Jogador {
 		return this.dinheiro;
 		
 	}
-	public ArrayList<String> getTitulos() {
+	public ArrayList<Titulo> getTitulos() {
 		return this.titulos;
 	}
 	
@@ -92,21 +98,22 @@ public class Jogador {
 			this.dinheiro += valor;
 		}
 	}
-public String getStatus() {
+public String getStatus() throws ErroAoCalcularAluguelException {
 	if (this.titulos.size() == 0 ) {
 	return ("O status de "+ this.nome.toUpperCase() +"("+this.cor+") é o seguinte :\n"
-			+ "Situado na posição: "+ this.posicao+ "\nPossui: $"+ this.dinheiro
+			+ "Situado na posição: "+ this.posicao + "\nPossui: $"+ this.dinheiro
 			+"\nTitulos : Nenhum");
 	}else {
 		
 		String guardaTitulos = "";
-		for (String k : titulos) {
-			guardaTitulos += k +"\n" ; 
+		for (Titulo k : titulos) {
+			guardaTitulos += "["+k.getNome()+"]" + " propriedade -"+k.getCor() +
+					", aluguel : $ "+ k.getAluguel() + "\n" ; 
 		}
 		
 		return ("O status de "+ this.nome.toUpperCase() +" ("+this.cor+") é o seguinte :\n"
 		+ "Situado na posição: "+ this.posicao+ "\nPossui: $"+ this.dinheiro
-		+ "\nTitulo(s) :" + guardaTitulos );
+		+ "\nTitulo(s) :\n" + guardaTitulos );
 	}
 
 }

@@ -8,7 +8,6 @@ public class CorInexistenteException extends Exception{
 			super(msg);
 			this.msg = msg;
 		}
-		
 		public String toString() {
 			return this.msg;
 		}

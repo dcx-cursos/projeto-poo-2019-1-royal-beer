@@ -212,7 +212,8 @@ public class Main {
 										String opcao = sc.nextLine();
 										if(opcao.toUpperCase().startsWith("S")) {
 											try {
-											cartaEmUso.comprar(jogador);
+											jogador.comprar(cartaEmUso);;
+								
 											}catch(ValorNegativoException|  SaldoInsuficienteException e){
 												System.out.println(e.toString());
 											}
@@ -229,7 +230,11 @@ public class Main {
 				
 			}else if (comando.toUpperCase().startsWith("ST")) {
 				
-				System.out.println(jogador.getStatus());
+				try{
+					System.out.println(jogador.getStatus());
+				}catch(ErroAoCalcularAluguelException e) {
+					e.toString();
+				}
 				
 				
 				

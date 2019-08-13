@@ -61,14 +61,14 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 		if (this.dono == null) {
 			this.dono = jogador;
 			jogador.debitar(preco);
-			jogador.addTitulo(this.nome);
+		
 			
 			
 		}
 	}
 	
 	
-	public double getAluguel() throws ErroAoCalcularAluguelException {
+	public double getAluguel() throws  ErroAoCalcularAluguelException {
 		if(this.quantidaDeCasas >5) {
 			
 			throw new ErroAoCalcularAluguelException("O numero de casas excede o limite");

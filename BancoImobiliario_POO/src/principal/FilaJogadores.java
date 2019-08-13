@@ -5,15 +5,20 @@ import java.util.List;
 
 public class FilaJogadores {
 	
-
+		/*
+		 * Classe que para Objetos 'FilaJogadores' que tem como função organizar os jogadores
+		 * do banco imobiliario
+		 * 
+		 * @author Matheus Morais
+		 */
 		
-		//Essa classe fila foi desenvolvida especificamente para lidar com a fila de jogadores do banco imobiliario	
 		
 	
 		private List<Jogador> fila;
 		private int tamanho;
 		private int ponteiro;
 		
+		//
 		public void adicionaJogadorNaFila(Jogador jog) {
 			fila.add(jog);
 		}

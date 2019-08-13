@@ -21,6 +21,7 @@ public class ProcuraNaLista {
 	}
 	//confere em uma lista do tipo Jogador se uma certa cor ja foi selecionada, caso positivo retorna o indice
 	//do jogador que selecionou a cor ,caso contrario retorna -1
+
 	public int buscaCorJogador(List<Jogador> lista ,String a) {
 		for(int k = 0;k<lista.size();k++) {
 			if(lista.get(k).getCor().toUpperCase().equals(a.toUpperCase())) {
