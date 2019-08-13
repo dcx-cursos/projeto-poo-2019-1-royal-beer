@@ -4,16 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+
 
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import principal.Jogador;
 import tabuleiro.CartasLugares;
-import tabuleiro.Dado;
 
 class JogadorTest {
 	
@@ -21,8 +17,7 @@ class JogadorTest {
 	
 
 	
-	@Mock
-	private Dado dado = org.mockito.Mockito.mock(Dado.class);
+	
 
 	@BeforeEach
 	public void setUp() {
@@ -43,8 +38,7 @@ class JogadorTest {
 		@Test
 		//Testa andar as casas usando um dado(mock)
 		public void testAndarCasas() {
-			int [] a = {2,4};
-			Mockito.when(dado.JogarDoisDados()).thenReturn(a);
+			int [] a = {2,4};//Simula o lançamento de dados com o valor 2 e 4
 			jog.andarCasas(a[0]+ a[1]);
 			assertEquals(6,jog.getPosicao());
 		}

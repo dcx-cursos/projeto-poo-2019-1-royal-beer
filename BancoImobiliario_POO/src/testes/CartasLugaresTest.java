@@ -2,14 +2,10 @@ package testes;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.Canvas;
 
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import exceptions.ErroAoCalcularAluguelException;
 import exceptions.LimiteDeConstrucoesException;
