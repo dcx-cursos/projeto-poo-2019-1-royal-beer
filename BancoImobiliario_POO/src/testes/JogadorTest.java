@@ -44,7 +44,7 @@ class JogadorTest {
 		public void testAndarCasas() {
 			int [] a = {2,4};
 			Mockito.when(dado.JogarDoisDados()).thenReturn(a);
-			jog.andarCasas(dado.JogarDoisDados());
+			jog.andarCasas(a[0]+ a[1]);
 			assertEquals(6,jog.getPosicao());
 		}
 	

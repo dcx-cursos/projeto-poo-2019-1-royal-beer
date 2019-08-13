@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
+import tabuleiro.Dado;
 import tabuleiro.Titulo;
 
 public class Jogador {
@@ -14,9 +15,11 @@ public class Jogador {
 	private int posicao;
 	private Double dinheiro = 1500.0;
 	private ArrayList<String> titulos;
+	private Dado dado;
 	
 	public Jogador(String nome , String cor ) {
 		
+		dado = new Dado();
 		this.nome = nome;
 		this.cor = cor;
 		this.posicao = 0;
@@ -38,13 +41,14 @@ public class Jogador {
 		return this.posicao;
 	}
 	
-	public void andarCasas(int [] dadosLancados) {
-		
+	public int []  andarCasas() {
+		int [] dadosLancados = dado.JogarDoisDados();
 		this.posicao +=  dadosLancados[0]+ dadosLancados[1];
 		if(this.posicao >= 40) {
 			this.posicao = this.posicao -40;
 			this.dinheiro += 200;
 		}
+		return dadosLancados;
 	
 	}
 	

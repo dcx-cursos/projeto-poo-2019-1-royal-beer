@@ -127,8 +127,8 @@ public class Main {
 				
 			}else if (comando.toUpperCase().startsWith("JO")) {
 
-				int dadosJogados [] = dado.JogarDoisDados(); 
-				jogador.andarCasas(dadosJogados);
+				int dadosJogados [] = jogador.andarCasas();; 
+			
 				CasaTabuleiro cartaAtual = null;
 				try {
 					cartaAtual = tabuleiro.getCasaTabuleiro(jogador.getPosicao());
