@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import principal.Jogador;
+import tabuleiro.CartasLugares;
 import tabuleiro.Dado;
 
 class JogadorTest {
@@ -58,8 +59,9 @@ class JogadorTest {
 		
 		@Test
 		//Testa se o nome do titulo foi adicionado na lista de nome dos titulos adiquiridos
-		public void testAddNomeTitulo() {
-			jog.addTitulo("Av. Rebouças");
+		public void testAddNomeTitulo() throws ValorNegativoException, SaldoInsuficienteException {
+			CartasLugares a = new CartasLugares("Leblon","rosa",100,6,30,90,270,400,500,50,50);
+			jog.comprar(a);
 			
 			assertEquals(1,jog.getTitulos().size());
 		}

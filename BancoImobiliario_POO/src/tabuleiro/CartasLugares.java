@@ -7,6 +7,14 @@ import exceptions.ValorNegativoException;
 import principal.Jogador;
 
 public class CartasLugares implements CasaTabuleiro, Titulo{
+	/*
+	 * Classe objeto do tipo CartasLugares, onde estão contidos seus 
+	 * atributos e metodos
+	 * 
+	 * @author Matheus Morais
+	 * @version 1.0
+	 * @since Release 1 da aplicação
+	 */
 	
 	
 	private String nome;
@@ -24,7 +32,21 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	private int posicao;
 	private Jogador dono = null;
 	
-	
+	/*
+	 * Metodo contrutor
+	 * @param nome String- nome da casa do tabuleiro a ser cadastrada
+	 * @param cor String- cor da casa do tabuleiro a ser cadastrada
+	 * @param preco Double- preco da casa do tabuleiro a ser cadastrada
+	 * @param valorAluguelSemCasa Double- valor do aluguel sem nenhuma casa
+	 * @param valorAluguelCom1Casa Double - valor do aluguel com 1 casa
+	 * @param valorAluguelCom2Casas Double - valor do aluguel com 2 casas
+	 * @param valorAluguelCom3Casas Double - valor do aluguel com 3 casas
+	 * @param valorAluguelCom4Casas Double - valor do aluguel com 4 casas
+	 * @param valorAluguelComHotel Double - valor do aluguel com Hotel
+	 * @param valorHipoteca Double - valor da hipoteca
+	 * @param valorImovelCasa Double - valor para comprar uma casa
+
+	 */
 	public CartasLugares(String nome,String cor,double preco, double valorAluguelSemCasa, double valorAluguelCom1Casa,
 		double valorAluguelCom2Casas,double valorAluguelCom3Casas,double valorAluguelCom4Casas,double valorAluguelComHotel,
 		double valorHipoteca,double valorImovelCasa) {
@@ -46,7 +68,11 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	}
 	
 	
-	
+	/*
+	 * Metodo que faz a venda de casas
+	 * @param jogador Jogador - jogador que deseja comprar a casa
+	 * @return void
+	 */
 	public void venderCasa(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException, LimiteDeConstrucoesException {
 		if(this.quantidaDeCasas <= 4) {
 		jogador.debitar(this.valorImovelCasa);
@@ -56,7 +82,10 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 		}
 	}
 
-	
+	/*
+	 * Metodo que realiza a compra da carta
+	 * @param jogador Jogador - jogador que vai comprar a carta
+	 */
 	public void comprar(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException{
 		if (this.dono == null) {
 			this.dono = jogador;
@@ -67,7 +96,10 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 		}
 	}
 	
-	
+	/*
+	 * Metodo que retorna o valor do aluguel de acordo com a quantidade de casas
+	 * @return Double - valor do aluguel
+	 */
 	public double getAluguel() throws  ErroAoCalcularAluguelException {
 		if(this.quantidaDeCasas >5) {
 			
@@ -83,6 +115,11 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	
 	}
 	
+	/*
+	 * Metodo que cobra do jogador o alugel
+	 * @param jogador Jogador - jogador a pagar o aluguel
+	 * @return void
+	 */
 	public void cobraAluguel(Jogador jogador) throws ErroAoCalcularAluguelException, ValorNegativoException, SaldoInsuficienteException {
 
 			jogador.debitar(getAluguel());
@@ -117,6 +154,10 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	public Jogador getDono() {
 		return this.dono;
 	}
+	 /*
+	  * Metodo que verifica se a carta tem dono
+	  * @return boolean - true caso a carta tenha dono negativo caso contrario
+	  */
 	
 	public boolean hasDono() {
 		if (this.dono == null ) {
