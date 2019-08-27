@@ -2,6 +2,9 @@ package testes;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +16,7 @@ class TestTabuleiro {
 	Tabuleiro tabuleiro;
 	 
 	@BeforeEach
-	public void setUp() {
+	public void setUp() throws FileNotFoundException, IOException {
 		tabuleiro = new Tabuleiro();
 	}
 	
@@ -21,6 +24,7 @@ class TestTabuleiro {
 	//Testa se a a carta '0' é o ponto de partida
 	public void testGetCasa0Tabuleiro() throws EntradaInvalidaException {
 		assertEquals("Ponto de partida",tabuleiro.getCasaTabuleiro(0).getNome());
+		
 	}
 	
 	@Test

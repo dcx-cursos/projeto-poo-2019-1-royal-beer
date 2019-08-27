@@ -154,10 +154,6 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	public Jogador getDono() {
 		return this.dono;
 	}
-	 /*
-	  * Metodo que verifica se a carta tem dono
-	  * @return boolean - true caso a carta tenha dono negativo caso contrario
-	  */
 	
 	public boolean hasDono() {
 		if (this.dono == null ) {
@@ -166,6 +162,9 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 		return true;
 	}
 	
+	public String getTipo() {
+		return "Carta terreno de cor :"+this.cor;
+	}
 	
 	
 

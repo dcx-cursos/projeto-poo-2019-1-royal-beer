@@ -1,6 +1,6 @@
 package tabuleiro;
 
-public class CartaSorteOuReves implements CasaTabuleiro{
+public class SorteOuReves implements CasaTabuleiro{
 	
 
 
