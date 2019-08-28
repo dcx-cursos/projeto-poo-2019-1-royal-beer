@@ -47,7 +47,13 @@ public class ProcuraNaLista {
 		}
 		return -1;
 
+	}
+	
+	public void removeStringDaLista() {
 		
 	}
+
+	
+	
 
 }

@@ -5,14 +5,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Tabuleiro {
+public class Tabuleiro  {
 	
 	private CasaTabuleiro [] tabuleiro = new CasaTabuleiro[40];
 	
 	
-	public Tabuleiro() throws FileNotFoundException, IOException {
+	public Tabuleiro() {
 		
-		this.geraTabuleiro();
+		try {
+			this.geraTabuleiro();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	
 		
 	}
@@ -21,7 +28,7 @@ public class Tabuleiro {
 		return tabuleiro[posicao];
 	}
 	
-	public void geraTabuleiro() throws FileNotFoundException,IOException{
+	private void geraTabuleiro() throws FileNotFoundException,IOException{
 		
 		FileReader fileReader = new FileReader("CasasTabuleiro.txt");
 		BufferedReader  bufferedReader = new BufferedReader(fileReader);
@@ -87,16 +94,21 @@ public class Tabuleiro {
 						Integer.parseInt(casa[4]),Integer.parseInt(casa[5]),Integer.parseInt(casa[6]),
 						Integer.parseInt(casa[7]),Integer.parseInt(casa[8]),Integer.parseInt(casa[9]),
 						Integer.parseInt(casa[10]),Integer.parseInt(casa[11]));
+				
+				tabuleiro[Integer.parseInt(casa[0])] = temp;
 			
 				
 			}
 		}
-		System.out.println("Tabuleiro gerado com sucesso");
 		fileReader.close();
 		bufferedReader.close();
 	
 	
 	}
+	
+	
+	
+	
 	
 	
 }

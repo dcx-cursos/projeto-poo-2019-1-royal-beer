@@ -1,10 +1,11 @@
 package exceptions;
 
-public class CorJaEscolhidaException extends Exception {
+public class CorIndisponivelException extends Exception {
 
+	private static final long serialVersionUID = 1L;
 	private String msg;
 	
-	public CorJaEscolhidaException(String msg) {
+	public CorIndisponivelException(String msg) {
 		super(msg);
 		this.msg = msg;
 	}

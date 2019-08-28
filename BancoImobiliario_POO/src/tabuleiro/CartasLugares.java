@@ -62,7 +62,7 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 		this.valorAluguelComHotel = valorAluguelComHotel;
 		this.valorHipoteca = valorHipoteca;
 		this.quantidaDeCasas = 0;
-		this.posicao = 0;
+		this.setPosicao(0);
 		
 		
 	}
@@ -164,6 +164,16 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	
 	public String getTipo() {
 		return "Carta terreno de cor :"+this.cor;
+	}
+
+
+	public int getPosicao() {
+		return posicao;
+	}
+
+
+	public void setPosicao(int posicao) {
+		this.posicao = posicao;
 	}
 	
 	
