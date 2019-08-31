@@ -10,5 +10,10 @@ public class PontoDePartida implements CasaTabuleiro {
 	public boolean hasDono() {
 		return false;
 	}
+	
+	public String getTipo() {
+		return "PONTODEPARTIDA";
+	}
+	
 
 }

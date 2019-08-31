@@ -18,6 +18,7 @@ class JogoFacadeTest {
 		
 	}
 
+	
 	@Test
 	void testCadastraJogador() throws CorIndisponivelException {
 		jogo.cadastraJogador("Matheus", "Preto");
@@ -25,12 +26,19 @@ class JogoFacadeTest {
 	}
 	
 	@Test
-	
 	void testAtualizacaoListaDeCores() throws CorIndisponivelException {
 		jogo.cadastraJogador("Will","Azul");
 		jogo.cadastraJogador("Matheus", "Preto");
 		jogo.cadastraJogador("Wesley","rosa");
 		assertEquals(5,jogo.getCores().size());
+	}
+	
+	@Test
+	void testJogadorComCor() throws CorIndisponivelException {
+		jogo.cadastraJogador("Will","Azul");
+		jogo.cadastraJogador("Matheus", "Preto");
+		jogo.cadastraJogador("Wesley","rosa");
+		assertEquals(-1,jogo.jogadorComCor("Laranja"));
 	}
 
 }

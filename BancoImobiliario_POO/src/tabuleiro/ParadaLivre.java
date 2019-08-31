@@ -10,4 +10,7 @@ public class ParadaLivre implements CasaTabuleiro{
 	public boolean hasDono() {
 		return false;
 	}
+	public String getTipo() {
+		return "PARADALIVRE";
+	}
 }

@@ -39,8 +39,7 @@ public class FilaJogadores {
 		 */
 		public void adicionaJogadorNaFila(Jogador jog) {
 			fila.add(jog);
-		}
-	
+		}	
 		/*
 		 * Metodo retorna a quantidade de jogadores
 		 * @return int - qantidade de jogadores

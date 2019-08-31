@@ -1,12 +1,18 @@
 package principal;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
+import exceptions.ComandoIndisponivelException;
 import exceptions.CorIndisponivelException;
+import exceptions.ErroAoCalcularAluguelException;
+import exceptions.SaldoInsuficienteException;
+import exceptions.ValorNegativoException;
+import tabuleiro.CasaTabuleiro;
+import tabuleiro.Companhia;
+import tabuleiro.Prisao;
 import tabuleiro.Tabuleiro;
+import tabuleiro.Terreno;
 
 public class JogoFacade  {
 
@@ -18,7 +24,12 @@ public class JogoFacade  {
 	
 	private ArrayList<String> comandosDisponiveis = carregaComandos();
 	
-	private int ponteiro = 0;
+	private Jogador jogadorDaVez = null;
+	
+	int [] resultadoDados;
+	
+	
+	private int ponteiro = -1;
 
 	
 	public void cadastraJogador(String nome , String cor) throws CorIndisponivelException{
@@ -31,7 +42,7 @@ public class JogoFacade  {
 		}else throw new CorIndisponivelException("Cor ja escolhida");
 	}
 	
-	private int jogadorComCor(String cor) {
+	public int jogadorComCor(String cor) {
 		for(int k = 0; k<this.jogadores.size();k++) {
 			if(this.jogadores.get(k).getCor().toUpperCase().equals(cor.toUpperCase())){
 				return k;
@@ -66,7 +77,7 @@ public class JogoFacade  {
 		return temp;
 	}
 	
-	public ArrayList getCores() {
+	public ArrayList<String> getCores() {
 		return this.coresDisponiveis;
 	}
 	
@@ -100,19 +111,23 @@ public class JogoFacade  {
 		if(this.ponteiro == this.jogadores.size()) {
 			this.ponteiro = 0;
 		}
-			return this.jogadores.get(this.ponteiro);
+			this.jogadorDaVez = this.jogadores.get(this.ponteiro);
+			this.getResultadoDado();
+			
+			return this.jogadorDaVez;
 		
 		
 	}
 	
 	private ArrayList<String> carregaComandos(){
 		ArrayList<String> temp = new ArrayList<String>();
-		temp.add("Jogar");
-		temp.add("Sair");
+		temp.add("JOGAR");
+		temp.add("SAIR");
 		return temp;
 	}
 	
 	public String getStringDeComandos() {
+		
 		String temp = "";
 		for(String a : this.comandosDisponiveis) {
 			temp += "["+ a +"]";
@@ -120,6 +135,219 @@ public class JogoFacade  {
 		return temp;
 		
 	}
+	
+	public boolean validaComando(String comando) {
+	
+		for(int k =0;k<this.comandosDisponiveis.size();k++){
+			if(comando.toUpperCase().startsWith(this.comandosDisponiveis.get(k).substring(0,3))){
+			return true;
+		}
+	}
+		return false;
+	}
+	
+	public boolean verificaSeJogoEstaAtivo() {
+		if(this.jogadores.size() > 1) return true;
+		return false;
+	}
+	
+	public CasaTabuleiro getCasaTabuleiro(int casa) {
+		return tabuleiro.getCartasLugares(casa);
+	}
+	
+	public int [] getResultadoDado() {
+		int [] numeros=new int [2];
+		Random random= new Random();
+		numeros[0]= random.nextInt(6)+1;
+		numeros[1]= random.nextInt(6)+1;
+		
+		this.resultadoDados = numeros;
+		return numeros;
+	}
+
+	public void chamaProxJogador() {
+		this.getProxJogador();
+
+	}
+
+	
+	
+	public String iniciaJogada() {
+		
+		
+		System.out.println( "A jogada de " + this.jogadorDaVez.getNome() + "("+ this.jogadorDaVez.getCor()+") começou");
+		
+		resultadoDados = this.getResultadoDado();
+		
+		Prisao prisao = tabuleiro.getPrisao();
+		if(prisao.verificaPrisioneiro(this.jogadorDaVez)) {
+			if(this.resultadoDados[0]==this.resultadoDados[1]) {
+				this.jogadorDaVez.apagaDadosJogados();
+				prisao.libertaPrisioneito(this.jogadorDaVez);
+				this.jogadorDaVez.andarCasas(this.resultadoDados[0]+this.resultadoDados[1],this.resultadoDados);
+				return("O Jogador" + this.jogadorDaVez.getNome() + "tirou"
+						+ this.resultadoDados[0]+","+this.resultadoDados[1]+"e saiu da prisao. Na proxima rodada "
+								+ "o jogador podera mover-se normalmente");
+				
+		}else {
+			return("O jogador " + this.jogadorDaVez.getNome()
+			+ " tirou os dados ["+this.resultadoDados[0]+","+this.resultadoDados[1]+"], e não saiu da prisão. "
+			+"[pagar][status][sair]");
+	
+		}
+	
+	}
+		return "[jogar][status][sair]" ;
+		
+		
+	}
+	
+	
+	
+	public String geraJogada(String comando) throws ErroAoCalcularAluguelException, ValorNegativoException, SaldoInsuficienteException, ComandoIndisponivelException {
+		
+		this.jogadorDaVez.andarCasas(this.resultadoDados[0]+this.resultadoDados[1],this.resultadoDados);
+		
+		
+
+		if(comando.toUpperCase().startsWith("JOG")) {
+			
+			if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("TERRENO")) {
+				Terreno aux = (Terreno) tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao());
+				if(!aux.hasDono()) {
+					return "O jogador "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
+							+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
+							+  this.jogadorDaVez.getPosicao()+" - "
+							+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
+							+ "\nO titulo da propriedade "+aux.getNome()+ " está disponivel"
+							+ "\n"+this.jogadorDaVez.getNome()+", você possui " + this.jogadorDaVez.getDinheiro()+"$" 
+							+ "\nDeseja comprar? ([SIM][NAO])";
+					
+				}
+				aux.cobraAluguel(this.jogadorDaVez);
+				return "O jogador "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
+						+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
+						+  this.jogadorDaVez.getPosicao()+" - "
+						+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
+						+ "A propriedade pertence a " + aux.getDono().getNome()+ " o valor do aluguel que será debitado "
+						+ "é de :"+ aux.getAluguel();
+	
+					
+			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("PRISAO")) {
+				Prisao aux = (Prisao) tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao());
+				System.out.println(aux.getMsg());
+				
+			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("COMPANHIA")) {
+				Companhia aux = (Companhia)  tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao());
+				
+				if(!aux.hasDono()) {
+					return "O jogador "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
+							+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
+							+  this.jogadorDaVez.getPosicao()+" - "
+							+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
+							+ "\nO titulo da "+aux.getNome()+ "está disponivel"
+							+ "\n"+this.jogadorDaVez.getNome()+", você possui " + this.jogadorDaVez.getDinheiro()
+							+ "\nDeseja comprar? ([SIM][NAO])";
+				}else {
+					
+					aux.cobraAluguel(this.jogadorDaVez,this.resultadoDados);
+					return "O jogador "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
+					+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
+					+  this.jogadorDaVez.getPosicao()+" - "
+					+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
+					+ "\nO titulo da "+aux.getNome()+ "está disponivel"
+					+ "\n"+this.jogadorDaVez.getNome()+", você possui" + this.jogadorDaVez.getDinheiro();
+					
+				}
+				
+					
+				
+			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("IMPOSTODERENDA")) {
+				this.jogadorDaVez.debitar(200);
+				return "O jogador "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
+						+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
+						+  this.jogadorDaVez.getPosicao()+" - "
+						+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
+						+ "Foram debitados 200$ de imposto de renda";
+				
+			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("LUCROSEDIVIDENDOS")){
+				this.jogadorDaVez.creditar(200);
+				return "O jogador "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
+						+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
+						+  this.jogadorDaVez.getPosicao()+" - "
+						+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
+						+ "Foram adicionados 200$ a sua conta";
+				
+			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("PARADALIVRE")) {
+				return "O jogador "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
+						+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
+						+  this.jogadorDaVez.getPosicao()+" - "
+						+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome();
+				
+			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("PONTODEPARTIDA")) {
+				
+				return "O jogador "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
+						+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
+						+  this.jogadorDaVez.getPosicao()+" - "
+						+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome();
+				
+			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("VAPARAPRISAO")) {
+				this.jogadorDaVez.setPosicao(10);
+				return "O jogador caiu na casa 'Vá para prisão' e foi colocado na Prisão."
+						+"Nas proximas jogadas para sair ele poderá pagar ou tentar pegar dois dados iguais";
+			}
+	
+			
+			return comando;
+		}else if(comando.toUpperCase().startsWith("ST")) {
+			return this.jogadorDaVez.getStatus();
+		
+		
+		}else if(comando.toUpperCase().startsWith("SAI")) {
+			this.jogadorDaVez.outGame();
+			this.jogadores.remove(this.jogadorDaVez);
+			if(!this.verificaSeJogoEstaAtivo()) {
+				return "Jogo encerrado";
+			}
+			return "O jogador "+this.jogadorDaVez.getNome()+"saiu do jogo";
+		}
+			
+		throw new ComandoIndisponivelException("O comando selecionado não está dentro das opções");
+	
+	
+
+	}
+	
+	public CasaTabuleiro getCasaAtual() {
+		
+		return tabuleiro.getCartasLugares(this.jogadorDaVez.getPosicao());
+	}
+	
+	public boolean isTerrenoCasaAtual() {
+		if(this.getCasaAtual().getTipo().equals("TERRENO")) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isCompanhiaCasaAtual() {
+		if(this.getCasaAtual().getTipo().equals("COMPANHIA")) {
+			return true;
+		}
+		return false;
+	}
+	
+	public Jogador getJogadorDaVez() {
+		return this.jogadorDaVez;
+	}
+			
+		
+		
+		
+		
+		
+	
+	
 	
 	
 	

@@ -12,6 +12,10 @@ public class VaParaPrisao implements CasaTabuleiro{
 	public boolean hasDono() {
 		return false;
 	}
+	
+	public String getTipo() {
+		return "SORTEOUREVES";
+	}
 
 	
 }

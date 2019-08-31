@@ -1,5 +1,7 @@
 package tabuleiro;
 
+import exceptions.SaldoInsuficienteException;
+import exceptions.ValorNegativoException;
 import principal.Jogador;
 
 public class Companhia implements CasaTabuleiro{
@@ -28,6 +30,19 @@ public class Companhia implements CasaTabuleiro{
 			return false;
 		}
 		return true;
+	}
+	
+	public void cobraAluguel(Jogador jog , int [] dados) throws SaldoInsuficienteException {
+		jog.debitar((dados[0]+dados[1])*this.multiplicador);
+	}
+	
+	public String getTipo() {
+		return "COMPANHIA";
+	}
+	
+	public void comprar(Jogador jog) throws SaldoInsuficienteException {
+		jog.debitar(this.preco);
+		this.dono = jog;
 	}
 	
 	

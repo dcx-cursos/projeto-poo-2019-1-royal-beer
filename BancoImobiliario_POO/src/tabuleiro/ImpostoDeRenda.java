@@ -23,5 +23,9 @@ public class ImpostoDeRenda  implements CasaTabuleiro{
 		jog.debitar(200);
 	}
 	
+	public String getTipo() {
+		return "IMPOSTODERENDA";
+	}
+	
 	
 }

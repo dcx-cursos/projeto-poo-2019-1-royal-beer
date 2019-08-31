@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import exceptions.ErroAoCalcularAluguelException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
-import tabuleiro.Dado;
 import tabuleiro.Titulo;
 
 public class Jogador {
@@ -25,7 +24,7 @@ public class Jogador {
 	private int posicao;
 	private Double dinheiro = 1500.0;
 	private ArrayList<Titulo> titulos;
-	private Dado dado;
+	private Fila dadosJogados;
 	
 	
 	/*
@@ -35,12 +34,12 @@ public class Jogador {
 	 */
 	public Jogador(String nome , String cor ) {
 		
-		dado = new Dado();
+		
 		this.nome = nome;
 		this.cor = cor;
 		this.posicao = 0;
 		this.titulos = new ArrayList<Titulo>();//mudar para o tipo titulos quando fizer a classe
-		
+		dadosJogados = new Fila();
 	}
 	
 	/*
@@ -63,33 +62,27 @@ public class Jogador {
 	public int getPosicao() {
 		return this.posicao;
 	}
-	/*
-	 * Método que realizada a movimentação do jogador no tabuleiro
-	 * 
-	 * @return Double - valor dos dados que foram jogados
-	 */
-	public int []  andarCasas() {
-		int [] dadosLancados = dado.JogarDoisDados();
-		this.posicao +=  dadosLancados[0]+ dadosLancados[1];
-		if(this.posicao >= 40) {
-			this.posicao = this.posicao -40;
-			this.dinheiro += 200;
-		}
-		return dadosLancados;
 	
-	}
+	
 	/*
 	 * Metodo que realiza a movimentação do jogador no tabuleiro
 	 * @param casasAAndar int - quantidade de casas a andar
 	 * @return void
 	 */
-	public void andarCasas(int casasAAndar) {
+	public void andarCasas(int casasAAndar,int[] dados) {
 		this.posicao += casasAAndar;
 		if (this.posicao >= 40) {
 			this.posicao = this.posicao -40 ;
 			this.dinheiro += 200;
+			String aux = Integer.toString(dados[0]) +""+ Integer.toString(dados[1]);
+			this.dadosJogados.enfileirar(aux);
 		}
 	}
+	
+	public void apagaDadosJogados() {
+		this.dadosJogados = new Fila();
+	}
+	
 	public double getDinheiro() {
 		return this.dinheiro;
 		
@@ -106,15 +99,13 @@ public class Jogador {
 	 * @param valor Double - valor a ser retirado(debitado)
 	 * @return void
 	 */
-	public void debitar(double valor) throws ValorNegativoException, SaldoInsuficienteException  {
+	public void debitar(double valor)throws SaldoInsuficienteException  {
 		if (valor >= 0 ) {
 			if(this.dinheiro >= valor) {
 				this.dinheiro -= valor;
 			}else {
 				throw new SaldoInsuficienteException("O seu saldo é insuficiente para realizar a açao");
 			}
-		}else {
-			throw new ValorNegativoException("O valor inserido não pode ser negativo");
 		}
 		if (this.dinheiro <= 0) {
 			this.onGame = false;
@@ -143,7 +134,7 @@ public class Jogador {
 	 *@return String - Status do jogador
 	 */
 	
-	public String getStatus() throws ErroAoCalcularAluguelException {
+	public String getStatus() throws ErroAoCalcularAluguelException  {
 	if (this.titulos.size() == 0 ) {
 	return ("O status de "+ this.nome.toUpperCase() +"("+this.cor+") é o seguinte :\n"
 			+ "Situado na posição: "+ this.posicao + "\nPossui: $"+ this.dinheiro
@@ -162,4 +153,17 @@ public class Jogador {
 	}
 
 }
+	
+	public void setPosicao(int newPosicao) {
+		this.posicao = newPosicao;
+	}
+	
+	public void outGame() {
+		this.onGame  = false;
+		
+	}
+	
+	
+	
+	
 }

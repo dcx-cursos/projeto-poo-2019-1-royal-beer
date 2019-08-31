@@ -3,8 +3,6 @@ package tabuleiro;
 public class SorteOuReves implements CasaTabuleiro{
 	
 
-
-	@Override
 	public String getNome() {
 		return "Sorte ou Reves";
 		
@@ -13,6 +11,10 @@ public class SorteOuReves implements CasaTabuleiro{
 	
 	public boolean hasDono() {
 		return false;
+	}
+	
+	public String getTipo() {
+		return "SORTEOUREVES";
 	}
 
 	

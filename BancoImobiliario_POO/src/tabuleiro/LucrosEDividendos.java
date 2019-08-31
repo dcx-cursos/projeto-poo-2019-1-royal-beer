@@ -19,4 +19,7 @@ public class LucrosEDividendos implements CasaTabuleiro {
 	public void ativaLucrosEDividendos(Jogador jog) {
 		jog.creditar(200);
 	}
+	public String getTipo() {
+		return "LUCROSEDIVIDENDOS";
+	}
 }

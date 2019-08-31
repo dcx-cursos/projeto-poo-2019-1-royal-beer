@@ -6,7 +6,7 @@ import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import principal.Jogador;
 
-public class CartasLugares implements CasaTabuleiro, Titulo{
+public abstract class Terreno implements CasaTabuleiro, Titulo{
 	/*
 	 * Classe objeto do tipo CartasLugares, onde estão contidos seus 
 	 * atributos e metodos
@@ -18,7 +18,6 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	
 	
 	private String nome;
-	private String cor;
 	private double preco;
 	private double valorAluguelSemCasa;
 	private double valorAlguelCom1Casa;
@@ -47,12 +46,11 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	 * @param valorImovelCasa Double - valor para comprar uma casa
 
 	 */
-	public CartasLugares(String nome,String cor,double preco, double valorAluguelSemCasa, double valorAluguelCom1Casa,
+	public Terreno(String nome,double preco, double valorAluguelSemCasa, double valorAluguelCom1Casa,
 		double valorAluguelCom2Casas,double valorAluguelCom3Casas,double valorAluguelCom4Casas,double valorAluguelComHotel,
 		double valorHipoteca,double valorImovelCasa) {
 		
 		this.nome = nome;
-		this.cor = cor;
 		this.preco = preco;
 		this.valorAluguelSemCasa = valorAluguelSemCasa;
 		this.valorAlguelCom1Casa = valorAluguelCom1Casa;
@@ -86,7 +84,7 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	 * Metodo que realiza a compra da carta
 	 * @param jogador Jogador - jogador que vai comprar a carta
 	 */
-	public void comprar(Jogador jogador) throws ValorNegativoException, SaldoInsuficienteException{
+	public void comprar(Jogador jogador) throws  SaldoInsuficienteException{
 		if (this.dono == null) {
 			this.dono = jogador;
 			jogador.debitar(preco);
@@ -148,9 +146,6 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 		return this.quantidaDeCasas;
 	}
 	
-	public String getCor() {
-		return this.cor;
-	}
 	public Jogador getDono() {
 		return this.dono;
 	}
@@ -163,7 +158,7 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	}
 	
 	public String getTipo() {
-		return "Carta terreno de cor :"+this.cor;
+		return "TERRENO";
 	}
 
 
@@ -175,8 +170,10 @@ public class CartasLugares implements CasaTabuleiro, Titulo{
 	public void setPosicao(int posicao) {
 		this.posicao = posicao;
 	}
-	
-	
+
+
+
+		
 
 	
 }

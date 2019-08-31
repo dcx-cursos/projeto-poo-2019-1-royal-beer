@@ -3,17 +3,31 @@ package principal;
 
 import java.util.Scanner;
 
+import exceptions.ComandoIndisponivelException;
 import exceptions.CorIndisponivelException;
+import exceptions.ErroAoCalcularAluguelException;
+import exceptions.SaldoInsuficienteException;
+import exceptions.ValorNegativoException;
+import tabuleiro.Companhia;
+import tabuleiro.Terreno;
+import tabuleiro.TerrenoAmarelo;
+import tabuleiro.TerrenoRosa;
 
 
 
 public class Main {
-	public static void main(String args[]) {
+	public static void main(String args[])  {
 
 		JogoFacade facade = new JogoFacade();
+		
 		Scanner sc = new Scanner(System.in);
+		
 		int numJogadores = 0;
+		
 		String corNovoJogador = null;
+		
+		String comandoSelecionado;
+		
 		
 		//Inicio do laço para seleção de quantidade de jogadores
 		while(true) {
@@ -66,15 +80,46 @@ public class Main {
 		System.out.println("O Banco Imobiliario vai começar. Aproveite!!");
 		
 		//Inicio do laço do jogo
-		while(facade.getJogadores().size() >= 1) {
-			Jogador jogadorDaVez = facade.getProxJogador();
-			System.out.println("A jogada de "+ jogadorDaVez.getNome()+" ("+jogadorDaVez.getCor()+") "
-					+"começou");
-			System.out.println("Comandos disponiveis : "+ facade.getStringDeComandos()
-			+"\nEntre com um comando");
-			String comandoSelecionado = sc.nextLine();
-		}
-		
+		while(facade.verificaSeJogoEstaAtivo()) {
+				System.out.println(facade.iniciaJogada());
+				String comando = null;
+				comando = sc.nextLine();
+				String jogadaStr = null;
+				try {
+				jogadaStr = facade.geraJogada(comando);
+				}catch(ErroAoCalcularAluguelException| ValorNegativoException| SaldoInsuficienteException| ComandoIndisponivelException e) {
+					System.out.println(e.toString());
+				}
+				System.out.println(jogadaStr);
+				if(facade.isCompanhiaCasaAtual()) {
+					Companhia temp = (Companhia) facade.getCasaAtual();
+					if(!temp.hasDono()) {
+						comando = sc.nextLine();
+						if(comando.toUpperCase().startsWith("S")) {
+							try {
+							temp.comprar(facade.getJogadorDaVez());
+							}catch(SaldoInsuficienteException e) {
+							System.out.println(e.toString());
+							}
+							System.out.println("Compra realizada com sucesso");
+						}
+					}
+				}else if(facade.isTerrenoCasaAtual()) {
+					Terreno temp = (Terreno) facade.getCasaAtual();
+					if(!temp.hasDono()) {
+						comando = sc.nextLine();
+						if(comando.toUpperCase().startsWith("S")) {
+							try {
+								temp.comprar(facade.getJogadorDaVez());
+							}catch(SaldoInsuficienteException e) {
+							System.out.println(e.toString());
+							}
+							System.out.println("Compra realizada com sucesso");
+						}
+					}
+				}
+		}//fim do laco do jogo
+		System.out.println("Jogo encerrado");
 		
 		
 	}//fim main
