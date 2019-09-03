@@ -1,29 +1,43 @@
 package principal;
 	
 import java.util.NoSuchElementException;
-
+/*
+ * Essa classe cria historico dos dados jogados
+ * @author Matheus Morais
+ */
 public class Fila {
 
-	private String [] vetor; //Vetor que guarda os elementos da fila
-	private int numeroDeElementos; //Variavel que guarda o max de elementos da fila
-	private int primeiro; // Variavel que guarda o primeiro elemento da lista
-	private int ultimo; //Index do ultimo espaço vazio
+	private String [] vetor; 
+	private int numeroDeElementos; 
+	private int primeiro; 
+	private int ultimo; 
 	
-	public Fila() { //Construtor
+	/*
+	 * Construtor Fila inicia cada variavel de instancia e atribui valor maximo ao vetor de 3
+	 * e as demais variaveis sao iniciadas com o valor 0
+	 */
+	public Fila() { 
 		this.vetor=  new String [3];
 		this.numeroDeElementos=0;
 		this.primeiro=0;
 		this.ultimo=0;
 	}
-	
-	public boolean vazio() { //Verifica se está vazio
+	/*
+	 * Metodo verifica se a fila está vazia
+	 */
+	public boolean vazio() {
 		return this.numeroDeElementos==0;
 	}
-	
-	public int tamanho() { // retorna a quantidade de elementos
+	/*
+	 * Metodo verifica e retorna o tamanho da lista
+	 * @return um inteiro com o tamanho da lista
+	 */
+	public int tamanho() {
 		return this.numeroDeElementos;
 	}
-	
+	/*
+	 * Adiciona um elemento no final da fila
+	 */
 	public void enfileirar(String item) { //add item
 		
 		this.vetor[this.ultimo++]= item; // add o item
@@ -32,7 +46,9 @@ public class Fila {
 		
 		if(numeroDeElementos<3) this.numeroDeElementos++;// add 1 na quantidade pelo item q entrou
 	}
-	
+	/*
+	 * retira o primeiro elemento da fila
+	 */
 	public String desenfileirar() { //Retira um elemento
 		if(vazio()) throw new NoSuchElementException ("Fila vazia");
 		
@@ -46,11 +62,17 @@ public class Fila {
 		
 		return item;
 	}
-	
+	/*returna o vetor que guarda o historico de dados
+	 * @return retorna um array de String
+	 * 
+	 */
 	public String [] getAll() {
 		return vetor;
 	}
-	
+	/*
+	 * retorna o ultimo os ultimos dois dados jogados
+	 * @return retorna um array com os dois ultimos dados jogados
+	 */
 	public String getUltimoDadoJogado() {
 		return this.vetor[ultimo];
 	}

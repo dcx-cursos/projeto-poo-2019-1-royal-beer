@@ -91,6 +91,7 @@ class JogoFacadeTest {
 		assertTrue(	temp[0] > 0 && temp[0]<7 && temp[1]>0 && temp[1]<7);
 		}
 	
+	
 
 	
 

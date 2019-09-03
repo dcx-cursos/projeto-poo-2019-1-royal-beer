@@ -17,7 +17,9 @@ import tabuleiro.Tabuleiro;
 import tabuleiro.Terreno;
 
 public class JogoFacade  {
-
+	/*
+	 * Classe que tem como função gerenciar o jogo
+	 */
 	private Tabuleiro tabuleiro = new Tabuleiro();
 	
 	private ArrayList<Jogador> jogadores = new ArrayList<>();
@@ -33,7 +35,12 @@ public class JogoFacade  {
 	
 	private int ponteiro = -1;
 
-	
+	/*
+	 * Metodo que cadastra o jogadores
+	 * @param nome Uma String com o nome do jogador
+	 * @param cor Uma String com a cor do jogador
+	 * @throws CorIndisponivelException caso a cor ecolhida nao esteja dentre as opcoes
+	 */
 	public void cadastraJogador(String nome , String cor) throws CorIndisponivelException{
 		if(this.jogadorComCor(cor) == -1) {
 			if(this.verificaCorNaLista(cor) != -1){
@@ -44,6 +51,12 @@ public class JogoFacade  {
 		}else throw new CorIndisponivelException("Cor ja escolhida");
 	}
 	
+	/*
+	 * Verifica se determinada cor ja foi escolhida dentre os jogadores
+	 * @param cor Uma String da cor a ser conferida
+	 * @return retorna um inteiro, -1 caso a cor não tenha sido encontrada ou o indice em que a cor se encontra
+	 * caso a mesma seja encontrada
+	 */
 	public int jogadorComCor(String cor) {
 		for(int k = 0; k<this.jogadores.size();k++) {
 			if(this.jogadores.get(k).getCor().toUpperCase().equals(cor.toUpperCase())){
@@ -52,7 +65,12 @@ public class JogoFacade  {
 		}
 		return -1;
 	}
-	
+	/*
+	 * Verifica se a cor é valida
+	 * @param item Uma string com a cor a ser procurada
+	 * @return retorna um inteiro , -1 caso a cor não tenha sido encontrada ou o indice em que a cor se encontra caso
+	 * a mesma seja encontrada
+	 */
 	public int verificaCorNaLista(String item) {
 		for(int k =0;k<coresDisponiveis.size();k++) {
 			if(item.toUpperCase().equals(this.coresDisponiveis.get(k))) return k;
@@ -60,7 +78,10 @@ public class JogoFacade  {
 		}
 		return -1;
 	}		
-
+	/*
+	 * Remove certa cor da lista
+	 * @param cor uma String que guarda a cor a ser retirada da lista
+	 */
 	private void removeCorDaLista(String cor) {
 		for(int k = 0 ; k<this.coresDisponiveis.size();k++) {
 			if(this.coresDisponiveis.get(k).equals(cor.toUpperCase())) {
@@ -70,7 +91,10 @@ public class JogoFacade  {
 		
 		}
 	
-		
+		/*
+		 * Obtem uma String com todas as cores juntas
+		 * @return Uma String com as cores
+		 */
 	public String getStringDeCores() {
 		String temp = "";
 		for(String a : this.coresDisponiveis) {
@@ -78,15 +102,23 @@ public class JogoFacade  {
 		}
 		return temp;
 	}
-	
+	/*
+	 * Obtem uma lista com as cores disponiveis
+	 * @return um ArrayList com as cores disponiveis
+	 */
 	public ArrayList<String> getCores() {
 		return this.coresDisponiveis;
 	}
-	
+	/*
+	 * Obtem a lista de jogadores
+	 * @return um ArrayList com todos os jogadores
+	 */
 	public ArrayList<Jogador> getJogadores(){
 		return this.jogadores;
 	}
-	
+	/*
+	 * Adiciona as cores na lista de cores
+	 */
 	public ArrayList<String> carregaCores() {
 		ArrayList<String> temp = new ArrayList<>();
 		temp.add("PRETO");
@@ -100,14 +132,20 @@ public class JogoFacade  {
 		
 		return temp;
 	}
-	
+	/*
+	 * Verifica de o numero de jogadores é suficiente para manter o jogo ativo
+	 * @return retorna true caso o numero de jogadores seja maior que 1 e menor que 8
+	 */
 	public boolean verificaNumeroDeJogadores(int numeroDeJogadores) {
 		if(numeroDeJogadores >= 2 && numeroDeJogadores <=8) {
 			return true;
 		}
 		return false;
 	}
-	
+	/*
+	 * Obtem o proximo jogador 
+	 * @return uma Objeto do tipo Jogador
+	 */
 	public Jogador getProxJogador() {
 		this.ponteiro+= 1;
 		if(this.ponteiro == this.jogadores.size()) {
@@ -123,14 +161,18 @@ public class JogoFacade  {
 		
 		
 	}
-	
+	/*
+	 * Carrega os comandos 
+	 */
 	private ArrayList<String> carregaComandos(){
 		ArrayList<String> temp = new ArrayList<String>();
 		temp.add("JOGAR");
 		temp.add("SAIR");
 		return temp;
 	}
-	
+	/*
+	 * Obtem uma String com os comandos
+	 */
 	public String getStringDeComandos() {
 		
 		String temp = "";
@@ -140,7 +182,11 @@ public class JogoFacade  {
 		return temp;
 		
 	}
-	
+	/*
+	 * Verifica se um comando é valido
+	 * @return retorna um inteiro , -1 caso o comando não tenha sido encontrada ou o indice em que o comando se encontra caso
+	 * a mesma seja encontrada
+	 */
 	public boolean validaComando(String comando) {
 	
 		for(int k =0;k<this.comandosDisponiveis.size();k++){
@@ -150,16 +196,25 @@ public class JogoFacade  {
 	}
 		return false;
 	}
-	
+	/*
+	 * Metodo que verifica se o jogo está ativo
+	 * @return true caso o jogo esteja artico,false caso contrario
+	 */
 	public boolean verificaSeJogoEstaAtivo() {
 		if(this.jogadores.size() > 1) return true;
 		return false;
 	}
-	
+	/*
+	 * retorna uma casa do tabuleiro de acordo com o parametro passado
+	 * @param casa Um inteiro que indica o indice do tabuleiro que se deseja
+	 */
 	public CasaTabuleiro getCasaTabuleiro(int casa) {
 		return tabuleiro.getCartasLugares(casa);
 	}
-	
+	/*
+	 * Lanca dois dados
+	 * @return retorna um array de inteiros com o valor dos dois dados
+	 */
 	public int [] getResultadoDado() {
 		int [] numeros=new int [2];
 		Random random= new Random();
@@ -172,7 +227,9 @@ public class JogoFacade  {
 
 
 	
-	
+	/*
+	 * Metodo que inicia a jogada de acordo com o estado do jogador
+	 */
 	public String iniciaJogada() {
 		
 			this.getProxJogador();
@@ -206,7 +263,11 @@ public class JogoFacade  {
 	}
 	
 	
-	
+	/*
+	 * Metodo que recebe os comandos
+	 * @param comando Uma string com o comando 
+	 * @return uma String de acordo com o comando inserido
+	 */
 	public String geraJogada(String comando) throws ErroAoCalcularAluguelException, ValorNegativoException, SaldoInsuficienteException, ComandoIndisponivelException {
 		
 		this.jogadorDaVez.andarCasas(this.resultadoDados[0]+this.resultadoDados[1],this.resultadoDados);
@@ -319,7 +380,7 @@ public class JogoFacade  {
 			this.jogadorDaVez.outGame();
 			this.jogadores.remove(this.jogadorDaVez);
 			if(!this.verificaSeJogoEstaAtivo()) {
-				return "Jogo encerrado";
+				return "Jogo encerrado\nOs demais jogadores faliram\nO jogador"+this.jogadorDaVez.getNome()+" venceu";
 			}
 			return "O jogador "+this.jogadorDaVez.getNome()+"saiu do jogo";
 		}else if(comando.toUpperCase().startsWith("PAG")) {
@@ -336,26 +397,39 @@ public class JogoFacade  {
 	
 
 	}
-	
+	/*
+	 * Obtem a casa atual do jogador
+	 * @retutn Um Objeto do tipo CasaTabuleiro
+	 */
 	public CasaTabuleiro getCasaAtual() {
 		
 		return tabuleiro.getCartasLugares(this.jogadorDaVez.getPosicao());
 	}
-	
+	/*
+	 * Verifica se a casa atual é um terreno
+	 * @return retorna true caso positivo e negativo caso contraio
+	 */
 	public boolean isTerrenoCasaAtual() {
 		if(this.getCasaAtual().getTipo().equals("TERRENO")) {
 			return true;
 		}
 		return false;
 	}
-	
+	/*
+	 * Verifica se a casa atual é uma companhia
+	 * @return retorna true caso positivo e negativo caso contraio
+	 */
 	public boolean isCompanhiaCasaAtual() {
 		if(this.getCasaAtual().getTipo().equals("COMPANHIA")) {
 			return true;
 		}
 		return false;
 	}
-	
+	/*
+	 * Obtem o jogador da vez
+	 * @return retorma um Objeto do tipo Jogador com o jogador da vez
+	 * 
+	 */
 	public Jogador getJogadorDaVez() {
 		return this.jogadorDaVez;
 	}
