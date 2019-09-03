@@ -36,13 +36,13 @@ public class Fila {
 	public String desenfileirar() { //Retira um elemento
 		if(vazio()) throw new NoSuchElementException ("Fila vazia");
 		
-		String item=this.vetor[this.primeiro]; //Copia
+		String item=this.vetor[this.primeiro]; 
 		
-		this.vetor[this.primeiro]= null; 	//apaga o conteudo
-		this.numeroDeElementos--;		//diminui a qntd de elementos
-		this.primeiro ++; //readapta o index do primeiro
+		this.vetor[this.primeiro]= null; 
+		this.numeroDeElementos--;		
+		this.primeiro ++; 
 		
-		if(this.primeiro==this.vetor.length) this.primeiro =0;//refazendo o ciclo
+		if(this.primeiro==this.vetor.length) this.primeiro =0;
 		
 		return item;
 	}
@@ -50,4 +50,10 @@ public class Fila {
 	public String [] getAll() {
 		return vetor;
 	}
+	
+	public String getUltimoDadoJogado() {
+		return this.vetor[ultimo];
+	}
+	
+	
 }

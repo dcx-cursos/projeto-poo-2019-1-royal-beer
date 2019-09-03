@@ -12,6 +12,9 @@ public class ErroAoGerarCasaException extends Exception {
 		this.msg = msg;
 		
 	}
+	public String toString() {
+		return this.msg;
+	}
 	
 
 

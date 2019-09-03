@@ -19,11 +19,9 @@ public interface Titulo {
 	/*
 	 * Metodo deve retornar o preco do terreno
 	 */
+	
 	public double getPreco();
 	
-	/*
-	 *Metodo deve retornar a cor do terreno
-	 */
-	public String getCor();
-	
+	public String getTipo();
+
 }

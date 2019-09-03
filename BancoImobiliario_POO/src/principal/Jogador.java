@@ -5,19 +5,13 @@ import java.util.ArrayList;
 import exceptions.ErroAoCalcularAluguelException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
+import tabuleiro.Companhia;
+import tabuleiro.Terreno;
 import tabuleiro.Titulo;
 
 public class Jogador {
 	
-	/*
-	 * Classe para objetos do tipo Jogador, onde estão contidos valores(parametros)
-	 * e métodos para o mesmo
-	 * 
-	 * @author Matheus Morais
-	 * @version 1.0
-	 * @since Release 1 da aplicaçao
-	 */
-	
+
 	private boolean onGame = true;
 	private String nome;
 	private String cor;
@@ -25,13 +19,9 @@ public class Jogador {
 	private Double dinheiro = 1500.0;
 	private ArrayList<Titulo> titulos;
 	private Fila dadosJogados;
+	private boolean cartaPrisao = false;
 	
-	
-	/*
-	 * Método construtor
-	 * @param nome String - Nome do jogador a ser cadastrado
-	 * @param cor String - Cor do jogador a ser cadastrado
-	 */
+
 	public Jogador(String nome , String cor ) {
 		
 		
@@ -42,11 +32,7 @@ public class Jogador {
 		dadosJogados = new Fila();
 	}
 	
-	/*
-	 * Metodo para realizar a compra de um Titulo
-	 * @param titulo Titulo - titulo a ser comprado
-	 * @return void
-	 */
+	
 	public void comprar(Titulo titulo) throws ValorNegativoException, SaldoInsuficienteException {
 		this.debitar(titulo.getPreco());
 		this.titulos.add(titulo);
@@ -63,12 +49,7 @@ public class Jogador {
 		return this.posicao;
 	}
 	
-	
-	/*
-	 * Metodo que realiza a movimentação do jogador no tabuleiro
-	 * @param casasAAndar int - quantidade de casas a andar
-	 * @return void
-	 */
+
 	public void andarCasas(int casasAAndar,int[] dados) {
 		this.posicao += casasAAndar;
 		if (this.posicao >= 40) {
@@ -77,6 +58,10 @@ public class Jogador {
 			String aux = Integer.toString(dados[0]) +""+ Integer.toString(dados[1]);
 			this.dadosJogados.enfileirar(aux);
 		}
+	}
+	
+	public String[] getHistDados() {
+		return this.dadosJogados.getAll();
 	}
 	
 	public void apagaDadosJogados() {
@@ -94,11 +79,7 @@ public class Jogador {
 	public boolean isOnGame() {
 		return this.onGame;
 	}
-	/*
-	 * Metoque de retira certo valor do jogador
-	 * @param valor Double - valor a ser retirado(debitado)
-	 * @return void
-	 */
+	
 	public void debitar(double valor)throws SaldoInsuficienteException  {
 		if (valor >= 0 ) {
 			if(this.dinheiro >= valor) {
@@ -112,27 +93,12 @@ public class Jogador {
 		}
 		
 	}
-	/*
-	 * Metodo que adiciona certo valor a conta do jogador
-	 * @param valor Double - valor a ser adicionado(creditado) na conta
-	 * @return void
-	 */
+	
 	public void creditar(double valor) {
 		if (valor > 0) {
 			this.dinheiro += valor;
 		}
 	}
-	/*
-	 * Metodo que retorna o status do jogador com as seguintes informaçẽs :
-	 * O nome do jogador;
-	 *A cor do peão;
-	 *O nome da posição atual no tabuleiro;
-	 *Quanto dinheiro o jogador possui;
-	 *Uma lista dos títulos que o jogador possui com as informações relativas a cada 
-	 *título (cor do grupo se for propriedade, aluguel das propriedades, valor das 
-	 *companhias, etc.).
-	 *@return String - Status do jogador
-	 */
 	
 	public String getStatus() throws ErroAoCalcularAluguelException  {
 	if (this.titulos.size() == 0 ) {
@@ -143,8 +109,13 @@ public class Jogador {
 		
 		String guardaTitulos = "";
 		for (Titulo k : titulos) {
-			guardaTitulos += "["+k.getNome()+"]" + " propriedade -"+k.getCor() +
-					", aluguel : $ "+ k.getAluguel() + "\n" ; 
+			if(k.getTipo().equals("TERRENO")) {
+				Terreno temp = (Terreno) k ;
+				guardaTitulos += "["+temp.getNome()+ "] - propriedade "+temp.getCor()+", aluguel : "+temp.getAluguel();
+			}else if(k.getTipo().equals("COMPANHIA")) {
+				Companhia temp = (Companhia) k;
+				guardaTitulos += "["+temp.getNome()+"]"+" - multiplicador : "+ temp.getMultiplicador() ;
+			}
 		}
 		
 		return ("O status de "+ this.nome.toUpperCase() +" ("+this.cor+") é o seguinte :\n"
@@ -162,6 +133,24 @@ public class Jogador {
 		this.onGame  = false;
 		
 	}
+	
+	public void receiveCartaPrisao() {
+		this.cartaPrisao = true;
+	}
+
+
+	public boolean hasCartaPrisao() {
+		return cartaPrisao;
+	}
+	
+	public int []  getUltimosDadosJogados() {
+		String[] aux = this.dadosJogados.getUltimoDadoJogado().split("");
+		int [] temp = { Integer.parseInt(aux[0]), Integer.parseInt(aux[1])};
+		return temp;
+	}
+
+
+	
 	
 	
 	

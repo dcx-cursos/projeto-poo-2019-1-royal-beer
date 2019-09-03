@@ -10,12 +10,11 @@ import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import tabuleiro.Companhia;
 import tabuleiro.Terreno;
-import tabuleiro.TerrenoAmarelo;
-import tabuleiro.TerrenoRosa;
 
 
 
 public class Main {
+	
 	public static void main(String args[])  {
 
 		JogoFacade facade = new JogoFacade();
@@ -26,7 +25,6 @@ public class Main {
 		
 		String corNovoJogador = null;
 		
-		String comandoSelecionado;
 		
 		
 		//Inicio do laço para seleção de quantidade de jogadores
@@ -82,13 +80,14 @@ public class Main {
 		//Inicio do laço do jogo
 		while(facade.verificaSeJogoEstaAtivo()) {
 				System.out.println(facade.iniciaJogada());
-				String comando = null;
+				String comando ;
 				comando = sc.nextLine();
 				String jogadaStr = null;
 				try {
 				jogadaStr = facade.geraJogada(comando);
 				}catch(ErroAoCalcularAluguelException| ValorNegativoException| SaldoInsuficienteException| ComandoIndisponivelException e) {
 					System.out.println(e.toString());
+					continue;
 				}
 				System.out.println(jogadaStr);
 				if(facade.isCompanhiaCasaAtual()) {
@@ -102,6 +101,8 @@ public class Main {
 							System.out.println(e.toString());
 							}
 							System.out.println("Compra realizada com sucesso");
+						}else if(comando.toUpperCase().startsWith("N")) {
+							continue;
 						}
 					}
 				}else if(facade.isTerrenoCasaAtual()) {
@@ -114,14 +115,19 @@ public class Main {
 							}catch(SaldoInsuficienteException e) {
 							System.out.println(e.toString());
 							}
-							System.out.println("Compra realizada com sucesso");
+							System.out.println("Compra rearalizada com sucesso");
+						}else if(comando.toUpperCase().startsWith("N")) {
+							continue;
 						}
 					}
 				}
 		}//fim do laco do jogo
+		System.out.println("Os demais jogadores faliram");
+		System.out.println(facade.getJogadorDaVez().getNome()+" venceu o jogo");
 		System.out.println("Jogo encerrado");
 		
-		
+		sc.close();
 	}//fim main
 
 }	
+

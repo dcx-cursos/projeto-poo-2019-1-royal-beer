@@ -26,7 +26,7 @@ class JogoFacadeTest {
 	}
 	
 	@Test
-	void testAtualizacaoListaDeCores() throws CorIndisponivelException {
+	void testRemoveCorDaLista() throws CorIndisponivelException {
 		jogo.cadastraJogador("Will","Azul");
 		jogo.cadastraJogador("Matheus", "Preto");
 		jogo.cadastraJogador("Wesley","rosa");
@@ -40,5 +40,58 @@ class JogoFacadeTest {
 		jogo.cadastraJogador("Wesley","rosa");
 		assertEquals(-1,jogo.jogadorComCor("Laranja"));
 	}
+	
+	@Test
+	void testVerificaCorNaLista() {
+		assertTrue(-1 != jogo.verificaCorNaLista("verde"));
+		assertTrue(-1 == jogo.verificaCorNaLista("magenta"));
+	}
+	
+	@Test
+	void testVerificaNumeroDeJogadores() {
+		assertTrue(jogo.verificaNumeroDeJogadores(2));
+		assertFalse(jogo.verificaNumeroDeJogadores(9));
+	}
+	
+	@Test
+	void testGetProxJogador() throws CorIndisponivelException {
+		jogo.cadastraJogador("Will","Azul");
+		jogo.cadastraJogador("Matheus", "Preto");
+		jogo.cadastraJogador("Wesley","rosa");
+		
+		assertEquals("Will",jogo.getProxJogador().getNome());
+		assertEquals("Matheus",jogo.getProxJogador().getNome());
+		assertEquals("Wesley",jogo.getProxJogador().getNome());
+		assertEquals("Will",jogo.getProxJogador().getNome());
+		
+	}
+	
+	@Test
+	void testCarregaCores() {
+		assertEquals(8,jogo.carregaCores().size());
+		
+	}
+	
+	@Test
+	void testVerificaJogoEstaAtivo() throws CorIndisponivelException {
+		jogo.cadastraJogador("Will","Azul");
+		assertFalse(jogo.verificaSeJogoEstaAtivo());
+		jogo.cadastraJogador("Matheus", "Preto");
+		assertTrue(jogo.verificaSeJogoEstaAtivo());
+	}
+	
+	@Test
+	void testGetCasaTabuleiro() {
+		assertEquals("PONTODEPARTIDA",jogo.getCasaTabuleiro(0).getTipo());
+	}
+	
+	@Test
+	void getResultadoDados() {
+		int [] temp = jogo.getResultadoDado();
+		assertTrue(	temp[0] > 0 && temp[0]<7 && temp[1]>0 && temp[1]<7);
+		}
+	
+
+	
 
 }

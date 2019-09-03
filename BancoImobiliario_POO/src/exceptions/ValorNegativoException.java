@@ -2,6 +2,10 @@ package exceptions;
 
 public class ValorNegativoException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String msg;
 	
 	public ValorNegativoException(String msg) {

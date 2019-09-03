@@ -170,6 +170,8 @@ public abstract class Terreno implements CasaTabuleiro, Titulo{
 	public void setPosicao(int posicao) {
 		this.posicao = posicao;
 	}
+	
+	public abstract String getCor();
 
 
 

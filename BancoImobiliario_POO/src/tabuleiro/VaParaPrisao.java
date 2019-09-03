@@ -14,7 +14,7 @@ public class VaParaPrisao implements CasaTabuleiro{
 	}
 	
 	public String getTipo() {
-		return "SORTEOUREVES";
+		return "VAPARAPRISAO";
 	}
 
 	

@@ -10,7 +10,9 @@ import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import tabuleiro.CasaTabuleiro;
 import tabuleiro.Companhia;
+import tabuleiro.Efeito;
 import tabuleiro.Prisao;
+import tabuleiro.SorteOuReves;
 import tabuleiro.Tabuleiro;
 import tabuleiro.Terreno;
 
@@ -24,7 +26,7 @@ public class JogoFacade  {
 	
 	private ArrayList<String> comandosDisponiveis = carregaComandos();
 	
-	private Jogador jogadorDaVez = null;
+	private Jogador jogadorDaVez = null ;
 	
 	int [] resultadoDados;
 	
@@ -85,7 +87,7 @@ public class JogoFacade  {
 		return this.jogadores;
 	}
 	
-	private ArrayList<String> carregaCores() {
+	public ArrayList<String> carregaCores() {
 		ArrayList<String> temp = new ArrayList<>();
 		temp.add("PRETO");
 		temp.add("BRANCO");
@@ -111,9 +113,12 @@ public class JogoFacade  {
 		if(this.ponteiro == this.jogadores.size()) {
 			this.ponteiro = 0;
 		}
-			this.jogadorDaVez = this.jogadores.get(this.ponteiro);
-			this.getResultadoDado();
-			
+		if(this.jogadores.get(this.ponteiro).isOnGame()) {
+		this.jogadorDaVez = this.jogadores.get(this.ponteiro);
+		}else {
+			this.jogadores.remove(this.ponteiro);
+			this.getProxJogador();
+		}
 			return this.jogadorDaVez;
 		
 		
@@ -165,14 +170,12 @@ public class JogoFacade  {
 		return numeros;
 	}
 
-	public void chamaProxJogador() {
-		this.getProxJogador();
-
-	}
 
 	
 	
 	public String iniciaJogada() {
+		
+			this.getProxJogador();
 		
 		
 		System.out.println( "A jogada de " + this.jogadorDaVez.getNome() + "("+ this.jogadorDaVez.getCor()+") começou");
@@ -185,9 +188,9 @@ public class JogoFacade  {
 				this.jogadorDaVez.apagaDadosJogados();
 				prisao.libertaPrisioneito(this.jogadorDaVez);
 				this.jogadorDaVez.andarCasas(this.resultadoDados[0]+this.resultadoDados[1],this.resultadoDados);
-				return("O Jogador" + this.jogadorDaVez.getNome() + "tirou"
-						+ this.resultadoDados[0]+","+this.resultadoDados[1]+"e saiu da prisao. Na proxima rodada "
-								+ "o jogador podera mover-se normalmente");
+			return("O Jogador" + this.jogadorDaVez.getNome() + "tirou"
+					+ this.resultadoDados[0]+","+this.resultadoDados[1]+"e saiu da prisao. Na proxima rodada "
+					+ "o jogador podera mover-se normalmente");
 				
 		}else {
 			return("O jogador " + this.jogadorDaVez.getNome()
@@ -210,7 +213,7 @@ public class JogoFacade  {
 		
 		
 
-		if(comando.toUpperCase().startsWith("JOG")) {
+		if(comando.toUpperCase().startsWith("JOG")||comando.equals("jogar")) {
 			
 			if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("TERRENO")) {
 				Terreno aux = (Terreno) tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao());
@@ -235,7 +238,7 @@ public class JogoFacade  {
 					
 			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("PRISAO")) {
 				Prisao aux = (Prisao) tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao());
-				System.out.println(aux.getMsg());
+				return (aux.getMsg());
 				
 			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("COMPANHIA")) {
 				Companhia aux = (Companhia)  tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao());
@@ -293,16 +296,25 @@ public class JogoFacade  {
 				
 			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("VAPARAPRISAO")) {
 				this.jogadorDaVez.setPosicao(10);
-				return "O jogador caiu na casa 'Vá para prisão' e foi colocado na Prisão."
+				return "O jogador"+ this.jogadorDaVez.getNome()+" tirou"+ resultadoDados[0]+","+ resultadoDados[1]+" e caiu na casa "
+						+ "Vá para prisão' e foi colocado na Prisão."
 						+"Nas proximas jogadas para sair ele poderá pagar ou tentar pegar dois dados iguais";
+				
+			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("SORTEOUREVES")){
+				SorteOuReves aux = (SorteOuReves) tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao());
+				Efeito aux1 = aux.getProxCarta();
+				aux1.aplicaEfeito(jogadorDaVez);
+				return aux1.getMensagem();
 			}
 	
 			
-			return comando;
+			
 		}else if(comando.toUpperCase().startsWith("ST")) {
-			return this.jogadorDaVez.getStatus();
+			this.ponteiro -- ;
+
+			return this.getJogadorDaVez().getStatus()+"\n(Aperte ENTER para proseguir com o jogo";
 		
-		
+			
 		}else if(comando.toUpperCase().startsWith("SAI")) {
 			this.jogadorDaVez.outGame();
 			this.jogadores.remove(this.jogadorDaVez);
@@ -310,8 +322,15 @@ public class JogoFacade  {
 				return "Jogo encerrado";
 			}
 			return "O jogador "+this.jogadorDaVez.getNome()+"saiu do jogo";
+		}else if(comando.toUpperCase().startsWith("PAG")) {
+			if(this.tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getTipo().equals("PRISAO")) {
+				Prisao prisao = tabuleiro.getPrisao();
+				this.jogadorDaVez.debitar(50);
+				prisao.libertaPrisioneito(this.jogadorDaVez);
+			}
 		}
-			
+		this.ponteiro--;
+		
 		throw new ComandoIndisponivelException("O comando selecionado não está dentro das opções");
 	
 	
@@ -340,6 +359,7 @@ public class JogoFacade  {
 	public Jogador getJogadorDaVez() {
 		return this.jogadorDaVez;
 	}
+}
 			
 		
 		
@@ -352,4 +372,3 @@ public class JogoFacade  {
 	
 	
 	
-}

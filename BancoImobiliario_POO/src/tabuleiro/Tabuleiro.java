@@ -13,6 +13,7 @@ public class Tabuleiro  {
 	
 	private TerrenoFactory factory = new TerrenoFactory();
 	
+	private SorteOuReves sorteOuReves = new SorteOuReves();
 	
 	public Tabuleiro() {
 		
@@ -60,8 +61,7 @@ public class Tabuleiro  {
 
 				
 			}else if(casa[1].toUpperCase().equals("SORTEOUREVES")) {
-				SorteOuReves temp = new SorteOuReves();
-				tabuleiro[Integer.parseInt(casa[0])] = temp;
+				tabuleiro[Integer.parseInt(casa[0])] = this.sorteOuReves;
 
 				
 				
