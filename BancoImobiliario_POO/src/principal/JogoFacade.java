@@ -10,6 +10,7 @@ import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import tabuleiro.CasaTabuleiro;
 import tabuleiro.Companhia;
+import tabuleiro.Dado;
 import tabuleiro.Efeito;
 import tabuleiro.Prisao;
 import tabuleiro.SorteOuReves;
@@ -30,7 +31,11 @@ public class JogoFacade  {
 	
 	private Jogador jogadorDaVez = null ;
 	
+	private Dado dados = new Dado();
+	
 	int [] resultadoDados;
+	
+	private int contador;
 	
 	
 	private int ponteiro = -1;
@@ -216,13 +221,7 @@ public class JogoFacade  {
 	 * @return retorna um array de inteiros com o valor dos dois dados
 	 */
 	public int [] getResultadoDado() {
-		int [] numeros=new int [2];
-		Random random= new Random();
-		numeros[0]= random.nextInt(6)+1;
-		numeros[1]= random.nextInt(6)+1;
-		
-		this.resultadoDados = numeros;
-		return numeros;
+		return dados.jogarDados();
 	}
 
 
@@ -237,7 +236,7 @@ public class JogoFacade  {
 		
 		System.out.println( "A jogada de " + this.jogadorDaVez.getNome() + "("+ this.jogadorDaVez.getCor()+") começou");
 		
-		resultadoDados = this.getResultadoDado();
+		this.resultadoDados = this.getResultadoDado();
 		
 		Prisao prisao = tabuleiro.getPrisao();
 		if(prisao.verificaPrisioneiro(this.jogadorDaVez)) {
@@ -273,7 +272,8 @@ public class JogoFacade  {
 		
 		
 
-		if(comando.toUpperCase().startsWith("JOG")||comando.equals("jogar")) {
+		if(comando.toUpperCase().startsWith("JOG")||comando.toUpperCase().equals("JOGAR")) {
+			
 			this.jogadorDaVez.andarCasas(this.resultadoDados[0]+this.resultadoDados[1],this.resultadoDados);
 			
 			if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("TERRENO")) {
@@ -283,7 +283,7 @@ public class JogoFacade  {
 							+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
 							+  this.jogadorDaVez.getPosicao()+" - "
 							+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
-							+ "\nO titulo da propriedade "+aux.getNome()+ " está disponivel"
+							+ "\nO titulo da propriedade "+aux.getNome()+ " está disponivel por $"+aux.getPreco()
 							+ "\n"+this.jogadorDaVez.getNome()+", você possui " + this.jogadorDaVez.getDinheiro()+"$" 
 							+ "\nDeseja comprar? ([SIM][NAO])";
 					
@@ -367,7 +367,19 @@ public class JogoFacade  {
 				aux1.aplicaEfeito(jogadorDaVez);
 				return aux1.getMensagem();
 			}
-	
+			//parte que cuida da ida para a prisao em caso de repetição dos dados 3 vezes
+			if(this.resultadoDados[0] == this.resultadoDados[1]) {
+				this.geraJogada("jogar");
+				this.ponteiro --;
+				this.contador ++;
+				if(contador >= 3) {
+					this.jogadorDaVez.setPosicao(9);
+					this.ponteiro = 0;
+				}
+			}
+			
+			
+			
 			
 			
 		}else if(comando.toUpperCase().startsWith("ST")) {
@@ -433,6 +445,8 @@ public class JogoFacade  {
 	public Jogador getJogadorDaVez() {
 		return this.jogadorDaVez;
 	}
+	
+
 }
 			
 		
@@ -440,7 +454,7 @@ public class JogoFacade  {
 		
 		
 		
-	
+
 	
 	
 	

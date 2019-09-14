@@ -4,13 +4,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import exceptions.CorIndisponivelException;
 import principal.JogoFacade;
+import tabuleiro.Dado;
 
 class JogoFacadeTest {
 	
 	public JogoFacade jogo ;
+	
+	
+	@Mock
+	Dado dado = null;
 	
 	@BeforeEach
 	public void setUp() {
@@ -90,6 +97,14 @@ class JogoFacadeTest {
 		int [] temp = jogo.getResultadoDado();
 		assertTrue(	temp[0] > 0 && temp[0]<7 && temp[1]>0 && temp[1]<7);
 		}
+	
+	@Test 
+	void testaIdaParaaPrisaoComRepeticaoDeDados() throws CorIndisponivelException {
+		int [] dadosT = {2,2};
+		Mockito.when(dado.jogarDados()).thenReturn(dadosT);
+		jogo.cadastraJogador("Matheus", "Preto");
+		
+	}
 	
 	
 

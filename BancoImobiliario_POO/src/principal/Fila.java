@@ -37,6 +37,7 @@ public class Fila {
 	}
 	/*
 	 * Adiciona um elemento no final da fila
+	 * @param uma string com o item a ser enfileirado
 	 */
 	public void enfileirar(String item) { //add item
 		
@@ -48,6 +49,7 @@ public class Fila {
 	}
 	/*
 	 * retira o primeiro elemento da fila
+	 * @return uma string com o elemento a ser retornado
 	 */
 	public String desenfileirar() { //Retira um elemento
 		if(vazio()) throw new NoSuchElementException ("Fila vazia");
@@ -76,6 +78,10 @@ public class Fila {
 	public String getUltimoDadoJogado() {
 		return this.vetor[ultimo];
 	}
+	
+
+	
+	
 	
 	
 }
