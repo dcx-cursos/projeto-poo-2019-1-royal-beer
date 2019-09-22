@@ -2,15 +2,25 @@ package tabuleiro;
 
 import java.util.ArrayList;
 
+import exceptions.SaldoInsuficienteException;
 import principal.Jogador;
 
-public class Prisao implements CasaTabuleiro{
+public class Prisao implements CasaTabuleiro ,Efeito{
 
 	private ArrayList<Jogador> presos;
 	
-	public Prisao() {
+	private static Prisao instance = null;
+	
+	private Prisao() {
 		this.presos = new ArrayList <>();
 		
+	}
+	
+	public static Prisao getInstance() {
+		if(instance == null) {
+			instance = new Prisao();
+		}
+		return instance;
 	}
 	
 	public void addPreso(Jogador jog) {
@@ -47,6 +57,18 @@ public class Prisao implements CasaTabuleiro{
 	
 	public String getTipo() {
 		return "PRISAO";
+	}
+
+	@Override
+	public void aplicaEfeito(Jogador jog) throws SaldoInsuficienteException {
+		jog.setPosicao(9);
+		
+	}
+
+	@Override
+	public String getMensagem() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

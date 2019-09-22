@@ -6,7 +6,7 @@ import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import principal.Jogador;
 
-public abstract class Terreno implements CasaTabuleiro, Titulo{
+public abstract class Terreno implements CasaTabuleiro, Titulo {
 	/*
 	 * Classe objeto do tipo CartasLugares, onde estão contidos seus 
 	 * atributos e metodos
@@ -84,11 +84,11 @@ public abstract class Terreno implements CasaTabuleiro, Titulo{
 	 * Metodo que realiza a compra da carta
 	 * @param jogador Jogador - jogador que vai comprar a carta
 	 */
-	public void comprar(Jogador jogador) throws  SaldoInsuficienteException{
+	public void comprar(Jogador jogador,Titulo tit) throws  SaldoInsuficienteException{
 		if (this.dono == null) {
 			this.dono = jogador;
 			jogador.debitar(preco);
-		
+			jogador.addTitulo(tit);
 			
 			
 		}
@@ -173,8 +173,13 @@ public abstract class Terreno implements CasaTabuleiro, Titulo{
 	
 	public abstract String getCor();
 
-
-
+	public double getValorCasa() {
+		return this.valorImovelCasa;
+	}
+	
+	public void comprarCasa() throws SaldoInsuficienteException {
+		this.dono.debitar(this.valorImovelCasa);
+	}
 		
 
 	

@@ -1,6 +1,8 @@
 package tabuleiro;
 
 import exceptions.ErroAoCalcularAluguelException;
+import exceptions.SaldoInsuficienteException;
+import principal.Jogador;
  /*
   * Interface para agrupar objetos do tipo Terreno
   */
@@ -23,5 +25,9 @@ public interface Titulo {
 	public double getPreco();
 	
 	public String getTipo();
+	
+	public void comprar(Jogador jog,Titulo tit) throws  SaldoInsuficienteException;
+	
+public boolean hasDono();
 
 }

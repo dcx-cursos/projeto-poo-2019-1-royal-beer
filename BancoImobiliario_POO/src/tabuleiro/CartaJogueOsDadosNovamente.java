@@ -26,7 +26,7 @@ public class CartaJogueOsDadosNovamente extends CartaSorteOuRevesGenerica implem
 
 	@Override
 	public String getMensagem() {
-		return "O jogador tirou( "+dadosJogados[0]+","+dadosJogados[1] + "e andou mais "+dadosJogados[0]+dadosJogados[1]
+		return "- Jogue os dados Novamente - O jogador tirou( "+dadosJogados[0]+","+dadosJogados[1] + ") e andou mais "+ (dadosJogados[0]+dadosJogados[1])
 				+"casas. Na proxima jogada podera jogar normalmente";
 	}
 

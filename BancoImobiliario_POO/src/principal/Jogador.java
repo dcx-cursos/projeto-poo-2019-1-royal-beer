@@ -1,6 +1,8 @@
 package principal;
 
+
 import java.util.ArrayList;
+import java.util.List;
 
 import exceptions.ErroAoCalcularAluguelException;
 import exceptions.SaldoInsuficienteException;
@@ -22,6 +24,9 @@ public class Jogador {
 	private ArrayList<Titulo> titulos;
 	private Fila dadosJogados;
 	private boolean cartaPrisao = false;
+	private List<Terreno> terrenos = new ArrayList<>();
+	private List<Companhia > empresas = new ArrayList<>();
+	private int [] ultimosDados;
 	
 /*
  * Contrutor Jogador recebe o nome e a cor do jogador e inicia as variaveis que acima não foram
@@ -37,14 +42,6 @@ public class Jogador {
 		dadosJogados = new Fila();
 	}
 	
-	/*
-	 * metodo que realiza a compra de um titulo
-	 * @param titulo Um objeto do tipo titulo que sera comprado
-	 */
-	public void comprar(Titulo titulo) throws ValorNegativoException, SaldoInsuficienteException {
-		this.debitar(titulo.getPreco());
-		this.titulos.add(titulo);
-	}
 	
 	/*
 	 * Retorna o nome
@@ -74,6 +71,7 @@ public class Jogador {
 	 * @param dados um array com os dados que foram lançados para que possam ser colocados no historico
 	 */
 	public void andarCasas(int casasAAndar,int[] dados) {
+		this.ultimosDados = dados;
 		this.posicao += casasAAndar;
 		if (this.posicao >= 40) {
 			this.posicao = this.posicao -40 ;
@@ -158,10 +156,10 @@ public class Jogador {
 		for (Titulo k : titulos) {
 			if(k.getTipo().equals("TERRENO")) {
 				Terreno temp = (Terreno) k ;
-				guardaTitulos += "["+temp.getNome()+ "] - propriedade "+temp.getCor()+", aluguel : "+temp.getAluguel();
+				guardaTitulos += "["+temp.getNome()+ "] - Propriedade "+temp.getCor()+", aluguel : $"+temp.getAluguel()+"\n";
 			}else if(k.getTipo().equals("COMPANHIA")) {
 				Companhia temp = (Companhia) k;
-				guardaTitulos += "["+temp.getNome()+"]"+" - multiplicador : "+ temp.getMultiplicador() ;
+				guardaTitulos += "["+temp.getNome()+"]"+" - multiplicador : "+ temp.getMultiplicador()+"\n" ;
 			}
 		}
 		
@@ -190,6 +188,13 @@ public class Jogador {
 	public void receiveCartaPrisao() {
 		this.cartaPrisao = true;
 	}
+	
+	/*
+	 * metodo que seta a carta prisao como false
+	 */
+	public void setFalseCartaPrisao() {
+		this.cartaPrisao = false;
+	}
 
 	/*
 	 * Verifica se o jogador tem a carta de passe livre da prisao
@@ -202,10 +207,52 @@ public class Jogador {
 	 * @return um array de inteiros com o s dados jogados na ultima jogada
 	 */
 	public int []  getUltimosDadosJogados() {
-		String[] aux = this.dadosJogados.getUltimoDadoJogado().split("");
-		int [] temp = { Integer.parseInt(aux[0]), Integer.parseInt(aux[1])};
+		return this.ultimosDados;
+	}
+	/*
+	 * metodo que adiciona um titulo a lista de titulos do jogador
+	 * @param um Titulo a ser adicionado
+	 */
+	public void addTitulo(Titulo t) {
+		this.titulos.add(t);
+		try {
+			Terreno a = (Terreno) t;
+			terrenos.add(a);
+		}catch(ClassCastException e) {
+			try {
+			Companhia a = (Companhia) t;
+			empresas.add(a);
+			}catch(ClassCastException j) {
+				System.err.println(e.toString());
+			}
+			
+		}
+	}
+	
+	public String getConstrucoes() {
+		String temp = "";
+		int cont = 1;
+		try {
+			for(Titulo a : this.titulos) {
+				Terreno k = (Terreno) a;
+				temp += cont + " - "+k.getNome()+" tem "+k.getQuantidadeDeCasas()+" casas contruidas, cada casa custa: $"+k.getValorCasa();
+				cont ++;
+			}
+		}catch(ClassCastException e) {
+			
+		}
+		if(temp.equals("")) {
+			return "Voce não possui terrenos para construir";
+		}
 		return temp;
 	}
+	
+	public List<Terreno> getTerrenos() {
+		return this.terrenos;
+	}
+	
+	
+
 
 
 	
