@@ -37,7 +37,7 @@ public class SorteOuReves implements CasaTabuleiro{
 		String [] temp1 = null;
 		for(int k = 0 ; k<26;k++) {
 			try {
-			 temp1 = bufferedReader.readLine().split(",");
+			 temp1 = bufferedReader.readLine().split(";");
 			}catch(IOException e) {
 				k--;
 				System.out.println(e.toString());
