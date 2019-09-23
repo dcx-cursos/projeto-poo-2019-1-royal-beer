@@ -278,6 +278,9 @@ public class JogoFacade  {
 			return "Comandos Disponiveis:\n[jogar][status][sair]";
 			
 		}else {
+			if(this.jogadorDaVez.getNumConstrucoes() > 0) {
+				return "Comandos Disponiveis:\n[jogar][status][construir][vender][sair]";
+			}
 			return "Comandos Disponiveis:\n[jogar][status][construir][sair]";
 		}
 		
@@ -336,7 +339,7 @@ public class JogoFacade  {
 							+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
 							+  this.jogadorDaVez.getPosicao()+" - "
 							+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
-							+ "\nO titulo da "+aux.getNome()+ "está disponivel"
+							+ "\nO titulo da "+aux.getNome()+ " está disponivel"
 							+ "\n"+this.jogadorDaVez.getNome()+", você possui " + this.jogadorDaVez.getDinheiro()
 							+ "\nDeseja comprar? ([SIM][NAO])";
 				}else {
@@ -442,6 +445,12 @@ public class JogoFacade  {
 			}else {
 				return this.getStringDeConstrucao();
 			}
+		}else if(comando.toUpperCase().startsWith("VEND")) {
+			if(this.jogadorDaVez.getNumConstrucoes() > 0) {
+				return this.getStringDeConstrucao();
+			}
+			throw new ComandoIndisponivelException("O comando selecionado não está dentro das opções");
+
 		}
 		this.ponteiro--;
 		
@@ -638,55 +647,55 @@ public class JogoFacade  {
 	 */
 	public String getStringDeConstrucao() {
 		String temp = this.jogadorDaVez.getNome()+ " possui $" + this.jogadorDaVez.getDinheiro();
-		temp += "Escolha onde quer construir :\n";
+		temp += " Escolha onde quer construir :\n";
 		int cont = 0;
 		this.construcoes = new ArrayList<>();
 		if(this.verificaMonopolioAmarelo(this.jogadorDaVez)) {
 			for(TerrenoAmarelo a : this.tabuleiro.getListaDeTerrenosAmarelos()) {
 				cont ++;
-				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa "+a.getValorCasa()+"\n";
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
 				construcoes.add(a);
 			}
 		}else if(this.verificaMonopolioAzul(this.jogadorDaVez)) {
 			for(TerrenoAzul a : this.tabuleiro.getListaDeTerrenosAzuis()) {
 				cont ++;
-				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa "+a.getValorCasa()+"\n";
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
 				construcoes.add(a);
 			}
 		}else if(this.verificaMonopolioCiano(this.jogadorDaVez)) {
 			for(TerrenoCiano a : this.tabuleiro.getListaDeTerrenosCiano()) {
 				cont ++;
-				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa "+a.getValorCasa()+"\n";
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
 				construcoes.add(a);
 			}
 		}else if(this.verificaMonopolioLaranja(this.jogadorDaVez)) {
 			for(TerrenoLaranja a : this.tabuleiro.getListaDeTerrenosLaranja()) {
 				cont ++;
-				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa "+a.getValorCasa()+"\n";
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
 				construcoes.add(a);
 			}
 		}else if(this.verificaMonopolioRosa(this.jogadorDaVez)) {
 			for(TerrenoRosa a : this.tabuleiro.getListaDeTerrenosRosa()) {
 				cont ++;
-				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa "+a.getValorCasa()+"\n";
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
 				construcoes.add(a);
 			}
 		}else if(this.verificaMonopolioRoxo(this.jogadorDaVez)) {
 			for(TerrenoRoxo a : this.tabuleiro.getListaDeTerrenosRoxo()) {
 				cont ++;
-				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa "+a.getValorCasa()+"\n";
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
 				construcoes.add(a);
 			}
 		}else if(this.verificaMonopolioVerde(this.jogadorDaVez)) {
 			for(TerrenoVerde a : this.tabuleiro.getListaDeTerrenosVerdes()) {
 				cont ++;
-				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casjoga(s) construidas, cada casa custa "+a.getValorCasa()+"\n";
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casjoga(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
 				construcoes.add(a);
 			}
 		}else if(this.verificaMonopolioVermelho(this.jogadorDaVez)) {
 			for(TerrenoVermelho a : this.tabuleiro.getListaDeTerrenosVermelhos()) {
 				cont ++;
-				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa "+a.getValorCasa()+"\n";
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
 				construcoes.add(a);
 
 			}

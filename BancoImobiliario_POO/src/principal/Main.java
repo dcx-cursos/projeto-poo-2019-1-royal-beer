@@ -6,6 +6,7 @@ import java.util.Scanner;
 import exceptions.ComandoIndisponivelException;
 import exceptions.CorIndisponivelException;
 import exceptions.ErroAoCalcularAluguelException;
+import exceptions.LimiteDeCasasAlcancadoException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import tabuleiro.Companhia;
@@ -100,10 +101,10 @@ public class Main {
 				}
 				System.out.println(jogadaStr);
 				
-				if(facade.getCasaAtual().getTipo().contentEquals("SORTEOUREVES")) {
-					System.out.println("Entri");
+				/*if(facade.getCasaAtual().getTipo().contentEquals("SORTEOUREVES")) {
 					continue;
 				}
+				*/
 				
 				if(comando.toUpperCase().startsWith("CONST")) {
 				while (true) {
@@ -120,7 +121,7 @@ public class Main {
 						try {
 						facade.GetConstrucoes().get(temp-1).comprarCasa();
 						System.out.println(facade.GetConstrucoes().size());
-						}catch( SaldoInsuficienteException  e ) {
+						}catch( SaldoInsuficienteException  | LimiteDeCasasAlcancadoException e) {
 							System.out.println(e.toString());
 						}catch( IndexOutOfBoundsException e) {
 							System.out.println("Entrada invalida");
@@ -131,6 +132,32 @@ public class Main {
 				}
 				facade.decrementaPonteiro();
 				continue;
+				}else if(comando.toUpperCase().startsWith("VEND")) {
+					while (true) {
+						int temp;
+						System.out.println("Digite o numero da propriedade(0 para sair)");
+						try {
+							temp = Integer.parseInt(sc.nextLine());
+						}catch(Exception e) {
+							System.out.println("Entrada inválida");
+							continue;
+						}
+						if(temp == 0) break;
+						if(temp > 0 && temp <= facade.GetConstrucoes().size()+1) {
+							try {
+							facade.GetConstrucoes().get(temp-1).venderCasa();
+							System.out.println(facade.GetConstrucoes().size());
+							}catch( LimiteDeCasasAlcancadoException e) {
+								System.out.println(e.toString());
+							}catch( IndexOutOfBoundsException e) {
+								System.out.println("Entrada invalida");
+							}
+						}
+						System.out.println(facade.getStringDeConstrucao());
+						
+					}
+					facade.decrementaPonteiro();
+					continue;
 				}
 				
 				if(facade.isCompanhiaCasaAtual()) {

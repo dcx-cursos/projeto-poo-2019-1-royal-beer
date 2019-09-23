@@ -27,6 +27,7 @@ public class Jogador {
 	private List<Terreno> terrenos = new ArrayList<>();
 	private List<Companhia > empresas = new ArrayList<>();
 	private int [] ultimosDados;
+	private int numConstrucoes;
 	
 /*
  * Contrutor Jogador recebe o nome e a cor do jogador e inicia as variaveis que acima não foram
@@ -249,6 +250,18 @@ public class Jogador {
 	
 	public List<Terreno> getTerrenos() {
 		return this.terrenos;
+	}
+	
+	public void incrementaContadorDeConstrucoes() {
+		this.numConstrucoes ++;
+	}
+	
+	public void decrementaContadorDeConstrucoes() {
+		this.numConstrucoes --;
+	}
+	
+	public int getNumConstrucoes() {
+		return this.numConstrucoes;
 	}
 	
 	

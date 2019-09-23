@@ -1,0 +1,26 @@
+Reves,Sua empresa foi multada por poluir demais. Pague 200,200
+Sorte,O dia do casamento chegou, receba os presentes.\nSerá debitado $50 de cada jogador
+Reves,Reformou a casa. Pague 50,50
+Sorte,Seu livro será publicado por uma grande editora. Receba 100,100
+Sorte,Suas ações na bolsa de valores estão em alta. Receba 100,100
+Reves,Você vai começar um curso de MBA e ganhou um bom desconto para pagamento a vista. Pague 20 ,20
+Reves,Ferias com a família. Pague 20,20
+Sorte,Recebeu o prêmio de profissional do ano e ganhou um carro. Receba 10,10
+Reves,Sua empresa vai patrocina uma expedição na antartida. Pague 50, 50
+Sorte,Vendeu parte da empresa para um investidor. Receba 75,75
+Sorte,Apostou num cavalo azarão e ganhou. Receba 100,100
+Reves,A falta de chuva prejudicou a colheita. Pague 45,45
+Sorte,Recebei uma herança inesperada. Receba 75,75
+Reves,Seu filho decidiu fazer intercambio. Pague 20,20
+Sorte,Sua casa será desapropriada para a construção de um metro e ganhará uma gorda indenização. Receba 60,60
+Sorte,Venceu licitação para grande obra. Receba 150,150
+Sorte,Seu iate afundou,mas você tinha seguro!. Receba 25,25
+Reves,Seus funcionarios entraram em greve. Pague 30,30
+Reves,Comprou obra de arte falsificada. Pague 22,22
+Reves,Seu jatinho precisa de manutenção. Pague 9,9
+Reves,Renovou a frota de carros da sua empresa. Pague 100,100
+Sorte,Ganhou sozinho na loteria. Receba 80,80
+Reves,Atualizou os computadores da empresa. Pague 30,30
+Reves,Um navio afundou com as sua mercadorias(não tinha seguro). Pague 40,40
+Reves,A produção de leite das suas fazendas ficou abaixo da expectativa. Pague 60,60
+Sorte,Tirou primeiro lugar no torneio de golfe. Receba 100,100

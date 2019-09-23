@@ -8,7 +8,9 @@ public class CartaReves extends CartaSorteOuRevesGenerica implements Efeito {
 	private String mensagem;
 	private int valorAPagar;
 	
-	
+	/*
+	 * metodo q
+	 */
 	public CartaReves(String mensagem , int valorAPagar) {
 		this.mensagem = mensagem;
 		this.valorAPagar = valorAPagar;

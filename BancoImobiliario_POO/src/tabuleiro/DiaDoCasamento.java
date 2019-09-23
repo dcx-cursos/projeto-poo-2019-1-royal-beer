@@ -8,8 +8,8 @@ public class DiaDoCasamento extends CartaSorteOuRevesGenerica implements Efeito 
 	private String mensagem;
 	private int valorACobrar = 50;
 	
-	public DiaDoCasamento(String mensagem) {
-		this.mensagem = mensagem;
+	public DiaDoCasamento() {
+		this.mensagem = "O dia do seu casamento chegou, receba os presentes.\nSerá debitado $50 de cada jogador";
 	}
 
 	

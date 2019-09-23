@@ -1,6 +1,7 @@
 package tabuleiro;
 
 import exceptions.ErroAoCalcularAluguelException;
+import exceptions.LimiteDeCasasAlcancadoException;
 import exceptions.LimiteDeConstrucoesException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
@@ -58,6 +59,7 @@ public abstract class Terreno implements CasaTabuleiro, Titulo {
 		this.valorAluguelCom3Casas = valorAluguelCom3Casas;
 		this.valorAluguelCom4Casas = valorAluguelCom4Casas;
 		this.valorAluguelComHotel = valorAluguelComHotel;
+		this.valorImovelCasa = valorImovelCasa;
 		this.valorHipoteca = valorHipoteca;
 		this.quantidaDeCasas = 0;
 		this.setPosicao(0);
@@ -176,9 +178,28 @@ public abstract class Terreno implements CasaTabuleiro, Titulo {
 	public double getValorCasa() {
 		return this.valorImovelCasa;
 	}
-	
-	public void comprarCasa() throws SaldoInsuficienteException {
+	/*
+	 * metodo que realiza a compra de casa
+	 * 
+	 */
+	public void comprarCasa() throws SaldoInsuficienteException ,LimiteDeCasasAlcancadoException{
+		if(this.quantidaDeCasas <= 5 ) {
+		this.dono.incrementaContadorDeConstrucoes();
+		this.quantidaDeCasas ++;
 		this.dono.debitar(this.valorImovelCasa);
+		}else {
+		throw new LimiteDeCasasAlcancadoException("O limite maximo de construções ja foi alcançado para este imóvel");
+		}
+	}
+	
+	public void venderCasa() throws LimiteDeCasasAlcancadoException {
+		if(this.quantidaDeCasas > 0) {
+		this.dono.decrementaContadorDeConstrucoes();
+		this.quantidaDeCasas -- ;
+		this.dono.creditar(this.valorImovelCasa);
+		}else {
+			throw new LimiteDeCasasAlcancadoException("Não existem mais construçẽs para retirar");
+		}
 	}
 		
 
