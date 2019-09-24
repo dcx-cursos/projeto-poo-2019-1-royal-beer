@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 import exceptions.ErroAoGerarCasaException;
 
@@ -67,7 +68,7 @@ public class Tabuleiro  {
 				
 				
 			}else if(casa[1].toUpperCase().equals("PRISAO")) {
-				Prisao temp = new Prisao();
+				Prisao temp = Prisao.getInstance();
 				tabuleiro[Integer.parseInt(casa[0])] = temp;
 				
 
@@ -137,6 +138,38 @@ public class Tabuleiro  {
 	
 	public Prisao getPrisao() {
 		return (Prisao) this.getCasaTabuleiro(10);
+	}
+	
+	public List<TerrenoAmarelo> getListaDeTerrenosAmarelos() {
+		return this.factory.getListaTerrenosAmarelos();
+	}
+	
+	public List<TerrenoAzul> getListaDeTerrenosAzuis(){
+		return this.factory.getListaTerrenosAzuis();
+	}
+	
+	public List<TerrenoCiano> getListaDeTerrenosCiano(){
+		return this.factory.getListaTerrenosCiano();
+	}
+	
+	public List<TerrenoLaranja> getListaDeTerrenosLaranja(){
+		return this.factory.getListaTerrenosLaranja();
+	}
+	
+	public List<TerrenoRosa> getListaDeTerrenosRosa(){
+		return this.factory.getListaTerrenosRosa();
+	}
+	
+	public List<TerrenoRoxo> getListaDeTerrenosRoxo(){
+		return this.factory.getListaTerrenosRoxos();
+	}
+	
+	public List<TerrenoVerde> getListaDeTerrenosVerdes(){
+		return this.factory.getListaTerrenosVerdes();
+	}
+	
+	public List<TerrenoVermelho> getListaDeTerrenosVermelhos(){
+		return this.factory.getListaTerrenosVermelhos();
 	}
 		
 		

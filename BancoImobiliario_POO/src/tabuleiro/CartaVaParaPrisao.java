@@ -9,6 +9,7 @@ public class CartaVaParaPrisao extends CartaSorteOuRevesGenerica implements Efei
 	
 	@Override
 	public void aplicaEfeito(Jogador jog) throws SaldoInsuficienteException {
+		Prisao.getInstance().addPreso(jog);
 		jog.setPosicao(9);
 		
 	}

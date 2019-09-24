@@ -10,11 +10,20 @@ import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import tabuleiro.CasaTabuleiro;
 import tabuleiro.Companhia;
+import tabuleiro.Dado;
 import tabuleiro.Efeito;
 import tabuleiro.Prisao;
 import tabuleiro.SorteOuReves;
 import tabuleiro.Tabuleiro;
 import tabuleiro.Terreno;
+import tabuleiro.TerrenoAmarelo;
+import tabuleiro.TerrenoAzul;
+import tabuleiro.TerrenoCiano;
+import tabuleiro.TerrenoLaranja;
+import tabuleiro.TerrenoRosa;
+import tabuleiro.TerrenoRoxo;
+import tabuleiro.TerrenoVerde;
+import tabuleiro.TerrenoVermelho;
 
 public class JogoFacade  {
 	/*
@@ -30,7 +39,13 @@ public class JogoFacade  {
 	
 	private Jogador jogadorDaVez = null ;
 	
-	int [] resultadoDados;
+	private ArrayList<Terreno> construcoes ;
+	
+	private Dado dados = new Dado();
+	
+	private int [] resultadoDados;
+	
+	private int contador;
 	
 	
 	private int ponteiro = -1;
@@ -216,13 +231,7 @@ public class JogoFacade  {
 	 * @return retorna um array de inteiros com o valor dos dois dados
 	 */
 	public int [] getResultadoDado() {
-		int [] numeros=new int [2];
-		Random random= new Random();
-		numeros[0]= random.nextInt(6)+1;
-		numeros[1]= random.nextInt(6)+1;
-		
-		this.resultadoDados = numeros;
-		return numeros;
+		return dados.jogarDados();
 	}
 
 
@@ -237,7 +246,7 @@ public class JogoFacade  {
 		
 		System.out.println( "A jogada de " + this.jogadorDaVez.getNome() + "("+ this.jogadorDaVez.getCor()+") começou");
 		
-		resultadoDados = this.getResultadoDado();
+		this.resultadoDados = this.getResultadoDado();
 		
 		Prisao prisao = tabuleiro.getPrisao();
 		if(prisao.verificaPrisioneiro(this.jogadorDaVez)) {
@@ -245,21 +254,37 @@ public class JogoFacade  {
 				this.jogadorDaVez.apagaDadosJogados();
 				prisao.libertaPrisioneito(this.jogadorDaVez);
 				this.jogadorDaVez.andarCasas(this.resultadoDados[0]+this.resultadoDados[1],this.resultadoDados);
-			return("O Jogador" + this.jogadorDaVez.getNome() + "tirou"
-					+ this.resultadoDados[0]+","+this.resultadoDados[1]+"e saiu da prisao. Na proxima rodada "
+				Jogador retorno = this.jogadorDaVez;
+				this.getProxJogador();
+			return("O Jogador " + retorno.getNome() + " tirou "
+					+ this.resultadoDados[0]+","+this.resultadoDados[1]+" e saiu da prisao. Na proxima rodada "
 					+ "o jogador podera mover-se normalmente");
 				
 		}else {
+			if(this.jogadorDaVez.hasCartaPrisao()) {
+				return("O jogador " + this.jogadorDaVez.getNome()
+				+ " tirou os dados ["+this.resultadoDados[0]+","+this.resultadoDados[1]+"], e não saiu da prisão. "
+				+"Comandos disponiveis:\n[pagar][jogar][status][carta][sair]");
+		
+			}
 			return("O jogador " + this.jogadorDaVez.getNome()
 			+ " tirou os dados ["+this.resultadoDados[0]+","+this.resultadoDados[1]+"], e não saiu da prisão. "
-			+"[pagar][status][sair]");
+			+"Comandos disponiveis:\n[jogar][pagar][status][sair]");
 	
 		}
+		}
+		if(this.getStringDeConstrucao() == null) {
+			
+			return "Comandos Disponiveis:\n[jogar][status][sair]";
+			
+		}else {
+			if(this.jogadorDaVez.getNumConstrucoes() > 0) {
+				return "Comandos Disponiveis:\n[jogar][status][construir][vender][sair]";
+			}
+			return "Comandos Disponiveis:\n[jogar][status][construir][sair]";
+		}
+		
 	
-	}
-		return "[jogar][status][sair]" ;
-		
-		
 	}
 	
 	
@@ -273,7 +298,12 @@ public class JogoFacade  {
 		
 		
 
-		if(comando.toUpperCase().startsWith("JOG")||comando.equals("jogar")) {
+		if(comando.toUpperCase().startsWith("JOG")||comando.toUpperCase().equals("JOGAR")) {
+			
+		
+			if(Prisao.getInstance().verificaPrisioneiro(this.jogadorDaVez)) {
+				return "Você não saiu da prisao";
+			}
 			this.jogadorDaVez.andarCasas(this.resultadoDados[0]+this.resultadoDados[1],this.resultadoDados);
 			
 			if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("TERRENO")) {
@@ -283,7 +313,7 @@ public class JogoFacade  {
 							+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
 							+  this.jogadorDaVez.getPosicao()+" - "
 							+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
-							+ "\nO titulo da propriedade "+aux.getNome()+ " está disponivel"
+							+ "\nO titulo da propriedade "+aux.getNome()+ " está disponivel por $"+aux.getPreco()
 							+ "\n"+this.jogadorDaVez.getNome()+", você possui " + this.jogadorDaVez.getDinheiro()+"$" 
 							+ "\nDeseja comprar? ([SIM][NAO])";
 					
@@ -293,7 +323,7 @@ public class JogoFacade  {
 						+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
 						+  this.jogadorDaVez.getPosicao()+" - "
 						+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
-						+ "A propriedade pertence a " + aux.getDono().getNome()+ " o valor do aluguel que será debitado "
+						+ ". A propriedade pertence a " + aux.getDono().getNome()+ " o valor do aluguel que será debitado "
 						+ "é de :"+ aux.getAluguel();
 	
 					
@@ -309,7 +339,7 @@ public class JogoFacade  {
 							+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
 							+  this.jogadorDaVez.getPosicao()+" - "
 							+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
-							+ "\nO titulo da "+aux.getNome()+ "está disponivel"
+							+ "\nO titulo da "+aux.getNome()+ " está disponivel"
 							+ "\n"+this.jogadorDaVez.getNome()+", você possui " + this.jogadorDaVez.getDinheiro()
 							+ "\nDeseja comprar? ([SIM][NAO])";
 				}else {
@@ -332,7 +362,7 @@ public class JogoFacade  {
 						+"tirou "+ resultadoDados[0]+","+ resultadoDados[1]+ " e avançou para " 
 						+  this.jogadorDaVez.getPosicao()+" - "
 						+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome()
-						+ "Foram debitados 200$ de imposto de renda";
+						+ " Foram debitados 200$ de imposto de renda";
 				
 			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("LUCROSEDIVIDENDOS")){
 				this.jogadorDaVez.creditar(200);
@@ -356,39 +386,71 @@ public class JogoFacade  {
 						+ tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getNome();
 				
 			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("VAPARAPRISAO")) {
-				this.jogadorDaVez.setPosicao(10);
-				return "O jogador"+ this.jogadorDaVez.getNome()+" tirou"+ resultadoDados[0]+","+ resultadoDados[1]+" e caiu na casa "
-						+ "Vá para prisão' e foi colocado na Prisão."
-						+"Nas proximas jogadas para sair ele poderá pagar ou tentar pegar dois dados iguais";
+				Prisao.getInstance().addPreso(this.jogadorDaVez);
+				return "O jogador "+ this.jogadorDaVez.getNome()+" tirou "+ resultadoDados[0]+","+ resultadoDados[1]+" e caiu na casa "
+						+ "Vá para prisão e foi colocado na Prisão."
+						+" Nas proximas jogadas para sair ele poderá pagar ou tentar pegar dois dados iguais";
 				
 			}else if(tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao()).getTipo().equals("SORTEOUREVES")){
 				SorteOuReves aux = (SorteOuReves) tabuleiro.getCasaTabuleiro(jogadorDaVez.getPosicao());
 				Efeito aux1 = aux.getProxCarta();
 				aux1.aplicaEfeito(jogadorDaVez);
-				return aux1.getMensagem();
+				return "O jogador "+this.getJogadorDaVez().getNome() + " tirou " + resultadoDados[0]+","+ resultadoDados[1] +" e caiu na casa SorteOuReves - " + aux1.getMensagem();
 			}
-	
+			//parte que cuida da ida para a prisao em caso de repetição dos dados 3 vezes
+			if(this.resultadoDados[0] == this.resultadoDados[1]) {
+				this.geraJogada("jogar");
+				this.ponteiro --;
+				this.contador ++;
+				if(contador >= 3) {
+					this.jogadorDaVez.setPosicao(9);
+					this.ponteiro = 0;
+				}
+			}
+			
+			
+			
 			
 			
 		}else if(comando.toUpperCase().startsWith("ST")) {
 			this.ponteiro -- ;
 
-			return this.getJogadorDaVez().getStatus()+"\n(Aperte ENTER para proseguir com o jogo";
+			return this.getJogadorDaVez().getStatus()+"\nAperte [Enter] para continuar";
 		
 			
 		}else if(comando.toUpperCase().startsWith("SAI")) {
 			this.jogadorDaVez.outGame();
 			this.jogadores.remove(this.jogadorDaVez);
 			if(!this.verificaSeJogoEstaAtivo()) {
-				return "Jogo encerrado\nOs demais jogadores faliram\nO jogador"+this.jogadorDaVez.getNome()+" venceu";
+				return "Jogo encerrado\nOs demais jogadores faliram\nO jogador "+this.jogadorDaVez.getNome()+" venceu";
 			}
-			return "O jogador "+this.jogadorDaVez.getNome()+"saiu do jogo";
-		}else if(comando.toUpperCase().startsWith("PAG")) {
-			if(this.tabuleiro.getCasaTabuleiro(this.jogadorDaVez.getPosicao()).getTipo().equals("PRISAO")) {
-				Prisao prisao = tabuleiro.getPrisao();
+			return "O jogador "+this.jogadorDaVez.getNome()+" saiu do jogo";
+			
+		}else if(comando.toUpperCase().equals("PAGAR")) {
+				if(Prisao.getInstance().verificaPrisioneiro(this.jogadorDaVez)) {
 				this.jogadorDaVez.debitar(50);
-				prisao.libertaPrisioneito(this.jogadorDaVez);
+				Prisao.getInstance().libertaPrisioneito(this.jogadorDaVez);
+				return "Você pagou a fiança e saiu da prisao. Foram debitados 50$ da sua conta";
+			}else if (comando.toUpperCase().equals("CARTA")){
+				if(Prisao.getInstance().verificaPrisioneiro(this.jogadorDaVez)&& this.jogadorDaVez.hasCartaPrisao()) {
+					Prisao.getInstance().libertaPrisioneito(this.jogadorDaVez);
+					this.jogadorDaVez.setFalseCartaPrisao();
+					return "Você usou a carta e saiu da prisao";
+				}
 			}
+			
+		}else if(comando.toUpperCase().startsWith("CONST")) {
+			if(this.getStringDeConstrucao() == null) {
+				throw new ComandoIndisponivelException("O comando selecionado não está dentro das opções");
+			}else {
+				return this.getStringDeConstrucao();
+			}
+		}else if(comando.toUpperCase().startsWith("VEND")) {
+			if(this.jogadorDaVez.getNumConstrucoes() > 0) {
+				return this.getStringDeConstrucao();
+			}
+			throw new ComandoIndisponivelException("O comando selecionado não está dentro das opções");
+
 		}
 		this.ponteiro--;
 		
@@ -433,6 +495,226 @@ public class JogoFacade  {
 	public Jogador getJogadorDaVez() {
 		return this.jogadorDaVez;
 	}
+	/*
+	 * Metodo que subtrai 1 do valor do ponteiros
+	 */
+	public void decrementaPonteiro() {
+		this.ponteiro --;
+	}
+	
+	
+
+	/*
+	 * metodo que verifica se um determinado jogador tem o monopolio das casas Amarelas
+	 * @param um Objeto do tipo Jogador para ser conferifo
+	 * @return um boolean true caso o jogador tenha o monopolio e false caso contratrio
+	 */
+	public boolean verificaMonopolioAmarelo(Jogador jog) {
+		
+		for(TerrenoAmarelo a : this.tabuleiro.getListaDeTerrenosAmarelos()) {
+			Jogador temp = a.getDono();
+			if(temp == null){
+				return false;
+			}else if(!temp.equals(jog)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/*
+	 * metodo que verifica se um determinado jogador tem o monopolio das casas Azuis
+	 * @param um Objeto do tipo Jogador para ser conferifo
+	 * @return um boolean true caso o jogador tenha o monopolio e false caso contratrio
+	 */
+	public boolean verificaMonopolioAzul(Jogador jog) {
+		
+		for(TerrenoAzul k : this.tabuleiro.getListaDeTerrenosAzuis()) {
+			Jogador temp = k.getDono();
+			if(temp == null){
+				return false;
+			}else if(!temp.equals(jog)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+
+	/*
+	 * metodo que verifica se um determinado jogador tem o monopolio das casas Ciano
+	 * @param um Objeto do tipo Jogador para ser conferifo
+	 * @return um boolean true caso o jogador tenha o monopolio e false caso contratrio
+	 */
+	public boolean verificaMonopolioCiano(Jogador jog) {
+		for(TerrenoCiano k : this.tabuleiro.getListaDeTerrenosCiano()) {
+			Jogador temp = k.getDono();
+			if(temp == null){
+				return false;
+			}else if(!temp.equals(jog)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	 /*
+	 * metodo que verifica se um determinado jogador tem o monopolio das casas Laranjas
+	 * @param um Objeto do tipo Jogador para ser conferifo
+	 * @return um boolean true caso o jogador tenha o monopolio e false caso contratrio
+	 */
+	public boolean verificaMonopolioLaranja(Jogador jog) {
+		for(TerrenoLaranja k : this.tabuleiro.getListaDeTerrenosLaranja()) {
+			Jogador temp = k.getDono();
+			if(temp == null){
+				return false;
+			}else if(!temp.equals(jog)) {
+				return false;
+			}		
+		}
+		return true;
+	}
+	
+	/*
+	 * metodo que verifica se um determinado jogador tem o monopolio das casas Rosa
+	 * @param um Objeto do tipo Jogador para ser conferifo
+	 * @return um boolean true caso o jogador tenha o monopolio e false caso contratrio
+	 */
+	public boolean verificaMonopolioRosa(Jogador jog) {
+		for(TerrenoRosa k : this.tabuleiro.getListaDeTerrenosRosa()) {
+			Jogador temp = k.getDono();
+			if(temp == null){
+				return false;
+			}else if(!temp.equals(jog)) {
+				return false;
+			}		
+		}
+		return true;
+	}
+	
+	/*
+	 * metodo que verifica se um determinado jogador tem o monopolio das casas Roxas
+	 * @param um Objeto do tipo Jogador para ser conferifo
+	 * @return um boolean true caso o jogador tenha o monopolio e false caso contratrio
+	 */
+	public boolean verificaMonopolioRoxo(Jogador jog) {
+		for (TerrenoRoxo k : this.tabuleiro.getListaDeTerrenosRoxo()) {
+			Jogador temp = k.getDono();
+			if(temp == null){
+				return false;
+			}else if(!temp.equals(jog)) {
+				return false;
+			}		
+		}
+		return true;
+	}
+	
+	/*
+	 * metodo que verifica se um determinado jogador tem o monopolio das casas Verdes
+	 * @param um Objeto do tipo Jogador para ser conferifo
+	 * @return um boolean true caso o jogador tenha o monopolio e false caso contratrio
+	 */
+	public boolean verificaMonopolioVerde(Jogador jog) {
+		for(TerrenoVerde k : this.tabuleiro.getListaDeTerrenosVerdes()) {
+			Jogador temp = k.getDono();
+			if(temp == null){
+				return false;
+			}else if(!temp.equals(jog)) {
+				return false;
+			}		}
+		return true;
+	}
+	
+	/*
+	 * metodo que verifica se um determinado jogador tem o monopolio das casas Vermelhas
+	 * @param um Objeto do tipo Jogador para ser conferifo
+	 * @return um boolean true caso o jogador tenha o monopolio e false caso contratrio
+	 */
+	public boolean verificaMonopolioVermelho(Jogador jog) {
+		for(TerrenoVermelho k : this.tabuleiro.getListaDeTerrenosVermelhos()) {
+			Jogador temp = k.getDono();
+			if(temp == null){
+				return false;
+			}else if(!temp.equals(jog)) {
+				return false;
+			}		}
+		return true;
+	}
+	
+	/*
+	 * metodo que gera a String do comando construção
+	 * @return uma String do comando construção
+	 */
+	public String getStringDeConstrucao() {
+		String temp = this.jogadorDaVez.getNome()+ " possui $" + this.jogadorDaVez.getDinheiro();
+		temp += " Escolha onde quer construir :\n";
+		int cont = 0;
+		this.construcoes = new ArrayList<>();
+		if(this.verificaMonopolioAmarelo(this.jogadorDaVez)) {
+			for(TerrenoAmarelo a : this.tabuleiro.getListaDeTerrenosAmarelos()) {
+				cont ++;
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
+				construcoes.add(a);
+			}
+		}else if(this.verificaMonopolioAzul(this.jogadorDaVez)) {
+			for(TerrenoAzul a : this.tabuleiro.getListaDeTerrenosAzuis()) {
+				cont ++;
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
+				construcoes.add(a);
+			}
+		}else if(this.verificaMonopolioCiano(this.jogadorDaVez)) {
+			for(TerrenoCiano a : this.tabuleiro.getListaDeTerrenosCiano()) {
+				cont ++;
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
+				construcoes.add(a);
+			}
+		}else if(this.verificaMonopolioLaranja(this.jogadorDaVez)) {
+			for(TerrenoLaranja a : this.tabuleiro.getListaDeTerrenosLaranja()) {
+				cont ++;
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
+				construcoes.add(a);
+			}
+		}else if(this.verificaMonopolioRosa(this.jogadorDaVez)) {
+			for(TerrenoRosa a : this.tabuleiro.getListaDeTerrenosRosa()) {
+				cont ++;
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
+				construcoes.add(a);
+			}
+		}else if(this.verificaMonopolioRoxo(this.jogadorDaVez)) {
+			for(TerrenoRoxo a : this.tabuleiro.getListaDeTerrenosRoxo()) {
+				cont ++;
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
+				construcoes.add(a);
+			}
+		}else if(this.verificaMonopolioVerde(this.jogadorDaVez)) {
+			for(TerrenoVerde a : this.tabuleiro.getListaDeTerrenosVerdes()) {
+				cont ++;
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casjoga(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
+				construcoes.add(a);
+			}
+		}else if(this.verificaMonopolioVermelho(this.jogadorDaVez)) {
+			for(TerrenoVermelho a : this.tabuleiro.getListaDeTerrenosVermelhos()) {
+				cont ++;
+				temp += cont + " - " + a.getNome()+" tem " + a.getQuantidadeDeCasas() + " casa(s) construidas, cada casa custa $"+a.getValorCasa()+"\n";
+				construcoes.add(a);
+
+			}
+		}else {
+			
+			return null;
+		}
+		
+		return temp;
+	}
+	
+	public ArrayList<Terreno> GetConstrucoes(){
+		return this.construcoes;
+	}
+	
+	
+	
+	
+
 }
 			
 		
@@ -440,7 +722,7 @@ public class JogoFacade  {
 		
 		
 		
-	
+
 	
 	
 	

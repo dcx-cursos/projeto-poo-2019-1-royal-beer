@@ -1,6 +1,9 @@
 package tabuleiro;
 
-public class VaParaPrisao implements CasaTabuleiro{
+import exceptions.SaldoInsuficienteException;
+import principal.Jogador;
+
+public class VaParaPrisao implements CasaTabuleiro ,Efeito{
 	
 	
 	public String getNome() {
@@ -15,6 +18,16 @@ public class VaParaPrisao implements CasaTabuleiro{
 	
 	public String getTipo() {
 		return "VAPARAPRISAO";
+	}
+	@Override
+	public void aplicaEfeito(Jogador jog) throws SaldoInsuficienteException {
+		jog.setPosicao(10);
+		
+	}
+	@Override
+	public String getMensagem() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

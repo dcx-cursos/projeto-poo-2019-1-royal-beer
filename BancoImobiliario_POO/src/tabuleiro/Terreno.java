@@ -1,12 +1,13 @@
 package tabuleiro;
 
 import exceptions.ErroAoCalcularAluguelException;
+import exceptions.LimiteDeCasasAlcancadoException;
 import exceptions.LimiteDeConstrucoesException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import principal.Jogador;
 
-public abstract class Terreno implements CasaTabuleiro, Titulo{
+public abstract class Terreno implements CasaTabuleiro, Titulo {
 	/*
 	 * Classe objeto do tipo CartasLugares, onde estão contidos seus 
 	 * atributos e metodos
@@ -58,6 +59,7 @@ public abstract class Terreno implements CasaTabuleiro, Titulo{
 		this.valorAluguelCom3Casas = valorAluguelCom3Casas;
 		this.valorAluguelCom4Casas = valorAluguelCom4Casas;
 		this.valorAluguelComHotel = valorAluguelComHotel;
+		this.valorImovelCasa = valorImovelCasa;
 		this.valorHipoteca = valorHipoteca;
 		this.quantidaDeCasas = 0;
 		this.setPosicao(0);
@@ -84,11 +86,11 @@ public abstract class Terreno implements CasaTabuleiro, Titulo{
 	 * Metodo que realiza a compra da carta
 	 * @param jogador Jogador - jogador que vai comprar a carta
 	 */
-	public void comprar(Jogador jogador) throws  SaldoInsuficienteException{
+	public void comprar(Jogador jogador,Titulo tit) throws  SaldoInsuficienteException{
 		if (this.dono == null) {
 			this.dono = jogador;
 			jogador.debitar(preco);
-		
+			jogador.addTitulo(tit);
 			
 			
 		}
@@ -173,8 +175,32 @@ public abstract class Terreno implements CasaTabuleiro, Titulo{
 	
 	public abstract String getCor();
 
-
-
+	public double getValorCasa() {
+		return this.valorImovelCasa;
+	}
+	/*
+	 * metodo que realiza a compra de casa
+	 * 
+	 */
+	public void comprarCasa() throws SaldoInsuficienteException ,LimiteDeCasasAlcancadoException{
+		if(this.quantidaDeCasas <= 5 ) {
+		this.dono.incrementaContadorDeConstrucoes();
+		this.quantidaDeCasas ++;
+		this.dono.debitar(this.valorImovelCasa);
+		}else {
+		throw new LimiteDeCasasAlcancadoException("O limite maximo de construções ja foi alcançado para este imóvel");
+		}
+	}
+	
+	public void venderCasa() throws LimiteDeCasasAlcancadoException {
+		if(this.quantidaDeCasas > 0) {
+		this.dono.decrementaContadorDeConstrucoes();
+		this.quantidaDeCasas -- ;
+		this.dono.creditar(this.valorImovelCasa);
+		}else {
+			throw new LimiteDeCasasAlcancadoException("Não existem mais construçẽs para retirar");
+		}
+	}
 		
 
 	

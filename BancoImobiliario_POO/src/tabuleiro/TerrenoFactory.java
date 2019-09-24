@@ -3,6 +3,7 @@ package tabuleiro;
 import java.util.ArrayList;
 
 import exceptions.ErroAoGerarCasaException;
+import principal.Jogador;
 
 public class TerrenoFactory  {
 	
@@ -216,9 +217,20 @@ public class TerrenoFactory  {
 	public ArrayList <TerrenoVermelho> getListaTerrenosVermelhos(){
 		return this.terrenosVermelhos;
 	}
+/*
+	public ArrayList<> verificaMonopolio(Jogador jog){
+		int cont;
+		cont = 0;
+		for(Terreno a : this.terrenosAmarelos) {
+			if(a.getDono().equals(jog)) {
+				cont ++;
+			}
+		}
+		if(cont == this.terrenosAmarelos.size()) {
 
-	
-	
+		}
+	}
+	*/
 
 	
 }

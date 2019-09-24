@@ -42,9 +42,10 @@ public class Companhia implements CasaTabuleiro,Titulo{
 		return "COMPANHIA";
 	}
 	
-	public void comprar(Jogador jog) throws SaldoInsuficienteException {
+	public void comprar(Jogador jog,Titulo t) throws SaldoInsuficienteException {
 		jog.debitar(this.preco);
 		this.dono = jog;
+		jog.addTitulo(t);
 	}
 	
 	public double getAluguel() throws ErroAoCalcularAluguelException{

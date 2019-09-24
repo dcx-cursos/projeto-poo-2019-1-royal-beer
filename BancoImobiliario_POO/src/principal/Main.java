@@ -6,10 +6,12 @@ import java.util.Scanner;
 import exceptions.ComandoIndisponivelException;
 import exceptions.CorIndisponivelException;
 import exceptions.ErroAoCalcularAluguelException;
+import exceptions.LimiteDeCasasAlcancadoException;
 import exceptions.SaldoInsuficienteException;
 import exceptions.ValorNegativoException;
 import tabuleiro.Companhia;
 import tabuleiro.Terreno;
+import tabuleiro.Titulo;
 
 
 
@@ -24,8 +26,6 @@ public class Main {
 		int numJogadores = 0;
 		
 		String corNovoJogador = null;
-		
-		
 		
 		//Inicio do laço para seleção de quantidade de jogadores
 		while(true) {
@@ -82,6 +82,16 @@ public class Main {
 				System.out.println(facade.iniciaJogada());
 				String comando ;
 				comando = sc.nextLine();
+				if(comando.toUpperCase().startsWith("SAIR")) {
+					System.out.println("Deseja mesmo sair?[SIM][NAO]");
+					String temp = sc.nextLine();
+					if(temp.toUpperCase().startsWith("S")) {
+						
+					}else if(temp.toUpperCase().startsWith("N")) {
+						facade.decrementaPonteiro();
+						continue;
+					}
+				}
 				String jogadaStr = null;
 				try {
 				jogadaStr = facade.geraJogada(comando);
@@ -90,28 +100,88 @@ public class Main {
 					continue;
 				}
 				System.out.println(jogadaStr);
+				
+				/*if(facade.getCasaAtual().getTipo().contentEquals("SORTEOUREVES")) {
+					continue;
+				}
+				*/
+				
+				if(comando.toUpperCase().startsWith("CONST")) {
+				while (true) {
+					int temp;
+					System.out.println("Digite o numero da propriedade(0 para sair)");
+					try {
+						temp = Integer.parseInt(sc.nextLine());
+					}catch(Exception e) {
+						System.out.println("Entrada inválida");
+						continue;
+					}
+					if(temp == 0) break;
+					if(temp > 0 && temp <= facade.GetConstrucoes().size()+1) {
+						try {
+						facade.GetConstrucoes().get(temp-1).comprarCasa();
+						System.out.println(facade.GetConstrucoes().size());
+						}catch( SaldoInsuficienteException  | LimiteDeCasasAlcancadoException e) {
+							System.out.println(e.toString());
+						}catch( IndexOutOfBoundsException e) {
+							System.out.println("Entrada invalida");
+						}
+					}
+					System.out.println(facade.getStringDeConstrucao());
+					
+				}
+				facade.decrementaPonteiro();
+				continue;
+				}else if(comando.toUpperCase().startsWith("VEND")) {
+					while (true) {
+						int temp;
+						System.out.println("Digite o numero da propriedade(0 para sair)");
+						try {
+							temp = Integer.parseInt(sc.nextLine());
+						}catch(Exception e) {
+							System.out.println("Entrada inválida");
+							continue;
+						}
+						if(temp == 0) break;
+						if(temp > 0 && temp <= facade.GetConstrucoes().size()+1) {
+							try {
+							facade.GetConstrucoes().get(temp-1).venderCasa();
+							System.out.println(facade.GetConstrucoes().size());
+							}catch( LimiteDeCasasAlcancadoException e) {
+								System.out.println(e.toString());
+							}catch( IndexOutOfBoundsException e) {
+								System.out.println("Entrada invalida");
+							}
+						}
+						System.out.println(facade.getStringDeConstrucao());
+						
+					}
+					facade.decrementaPonteiro();
+					continue;
+				}
+				
 				if(facade.isCompanhiaCasaAtual()) {
-					Companhia temp = (Companhia) facade.getCasaAtual();
+					Titulo temp = (Titulo) facade.getCasaAtual();
 					if(!temp.hasDono()) {
 						comando = sc.nextLine();
-						if(comando.toUpperCase().startsWith("S")) {
+						if(comando.toUpperCase().toUpperCase().startsWith("SI")) {
 							try {
-							temp.comprar(facade.getJogadorDaVez());
+							temp.comprar(facade.getJogadorDaVez(),(Titulo)facade.getCasaTabuleiro(facade.getJogadorDaVez().getPosicao()));
 							}catch(SaldoInsuficienteException e) {
 							System.out.println(e.toString());
 							}
 							System.out.println("Compra realizada com sucesso");
-						}else if(comando.toUpperCase().startsWith("N")) {
+						}else if(comando.toUpperCase().toUpperCase().startsWith("N")) {
 							continue;
 						}
 					}
 				}else if(facade.isTerrenoCasaAtual()) {
-					Terreno temp = (Terreno) facade.getCasaAtual();
+					Titulo temp = (Titulo) facade.getCasaAtual();
 					if(!temp.hasDono()) {
 						comando = sc.nextLine();
 						if(comando.toUpperCase().startsWith("S")) {
 							try {
-								temp.comprar(facade.getJogadorDaVez());
+								temp.comprar(facade.getJogadorDaVez(),(Titulo)facade.getCasaTabuleiro(facade.getJogadorDaVez().getPosicao()));
 							}catch(SaldoInsuficienteException e) {
 							System.out.println(e.toString());
 							}
@@ -119,12 +189,11 @@ public class Main {
 						}else if(comando.toUpperCase().startsWith("N")) {
 							continue;
 						}
+						
 					}
 				}
 		}//fim do laco do jogo
-		System.out.println("Os demais jogadores faliram");
-		System.out.println(facade.getJogadorDaVez().getNome()+" venceu o jogo");
-		System.out.println("Jogo encerrado");
+		
 		
 		sc.close();
 	}//fim main

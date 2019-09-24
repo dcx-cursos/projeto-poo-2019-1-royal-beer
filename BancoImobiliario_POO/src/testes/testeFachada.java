@@ -2,15 +2,28 @@ package testes;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
+import exceptions.ComandoIndisponivelException;
 import exceptions.CorIndisponivelException;
+import exceptions.SaldoInsuficienteException;
+import principal.Jogador;
 import principal.JogoFacade;
+import tabuleiro.Dado;
+import tabuleiro.Terreno;
 
-class JogoFacadeTest {
+class testeFachada {
+
+public JogoFacade jogo ;
 	
-	public JogoFacade jogo ;
+	
+	@Mock
+	Dado dado = null;
+	
+	
 	
 	@BeforeEach
 	public void setUp() {
@@ -18,13 +31,37 @@ class JogoFacadeTest {
 		
 	}
 
-	
+	//testa o metodo de cadastro
 	@Test
 	void testCadastraJogador() throws CorIndisponivelException {
 		jogo.cadastraJogador("Matheus", "Preto");
 		assertEquals(1,jogo.getJogadores().size());
 	}
 	
+	/*
+	 *testa o lançamento da exceção caso o jogador escolha uma cor que não está
+	 *disponivel
+	 */
+	@Test
+	void testCorIncdisponivelException() {
+		Assertions.assertThrows(CorIndisponivelException.class, () ->{
+			jogo.cadastraJogador("Matheus", "Macarrao");
+		});
+		Assertions.assertThrows(CorIndisponivelException.class, () ->{
+			jogo.cadastraJogador("Matheus", "Preto");
+			jogo.cadastraJogador("Jose","Preto");
+		});
+	}
+	/*
+	 * testa o lançamento da exceção caso o comando escolhido não esteja 
+	 * dentro das opçoẽs
+	 */
+	@Test
+	void testComandoIndisponivelException() {
+		Assertions.assertThrows(ComandoIndisponivelException.class,() ->{
+			jogo.geraJogada("Bobao");
+		});
+	}
 	@Test
 	void testRemoveCorDaLista() throws CorIndisponivelException {
 		jogo.cadastraJogador("Will","Azul");
@@ -86,13 +123,22 @@ class JogoFacadeTest {
 	}
 	
 	@Test
-	void getResultadoDados() {
+	void testGetResultadoDados() {
 		int [] temp = jogo.getResultadoDado();
 		assertTrue(	temp[0] > 0 && temp[0]<7 && temp[1]>0 && temp[1]<7);
-		}
+	}
 	
+	@Test 
+	void testHasDono() throws CorIndisponivelException, SaldoInsuficienteException {
+		Jogador jog = new Jogador("Preto","Azul");
+		Terreno temp = (Terreno)jogo.getCasaTabuleiro(1);
+		temp.comprar(jog,null);
+		assertTrue(temp.hasDono());
+	}
 	
 
+	
+	
 	
 
 }

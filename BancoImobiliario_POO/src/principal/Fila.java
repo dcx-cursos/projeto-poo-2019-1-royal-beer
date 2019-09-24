@@ -37,17 +37,19 @@ public class Fila {
 	}
 	/*
 	 * Adiciona um elemento no final da fila
+	 * @param uma string com o item a ser enfileirado
 	 */
 	public void enfileirar(String item) { //add item
+		this.vetor[this.ultimo] = item;
+		ultimo ++;
+		if(ultimo == 3) {
+			ultimo = 0;
+		}
 		
-		this.vetor[this.ultimo++]= item; // add o item
-		
-		if(this.ultimo==this.vetor.length) this.ultimo=0; //se der overflow o ultimo, começa do inicio
-		
-		if(numeroDeElementos<3) this.numeroDeElementos++;// add 1 na quantidade pelo item q entrou
 	}
 	/*
 	 * retira o primeiro elemento da fila
+	 * @return uma string com o elemento a ser retornado
 	 */
 	public String desenfileirar() { //Retira um elemento
 		if(vazio()) throw new NoSuchElementException ("Fila vazia");
@@ -76,6 +78,10 @@ public class Fila {
 	public String getUltimoDadoJogado() {
 		return this.vetor[ultimo];
 	}
+	
+
+	
+	
 	
 	
 }
